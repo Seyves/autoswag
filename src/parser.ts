@@ -8,6 +8,7 @@ export enum NodeType {
     Boolean,
     Object,
     Union,
+    Enum,
 }
 
 interface BaseNode {
@@ -24,7 +25,10 @@ export interface ObjectNode extends BaseNode {
 export interface UnionNode extends BaseNode {
     oneOf: Node[]
 }
-export type Node = PrimitiveNode | ObjectNode | UnionNode
+export interface EnumNode extends BaseNode {
+    values: string[] | number[]
+}
+export type Node = PrimitiveNode | ObjectNode | UnionNode | EnumNode
 
 export function parse(fileName: string) {
     const program = ts.createProgram([fileName], {
@@ -39,8 +43,6 @@ export function parse(fileName: string) {
     const tree: Node[] = []
     for (const child of children) {
         const type = checker.getTypeAtLocation(child)
-        const symbol = type.symbol
-        if (!symbol) continue
         tree.push(typeToTree(type, checker))
     }
     return tree
@@ -78,12 +80,36 @@ function typeToTree(type: ts.Type, checker: ts.TypeChecker): Node {
     }
 
     if (type.isUnion()) {
-        // This condition needed because ts represent boolean 
+        // This condition needed because ts represent boolean
         // internally as `true | false` union
         const isBooleanUnion = type.types.every((t) => t.flags & ts.TypeFlags.BooleanLiteral)
         if (isBooleanUnion) {
             return {
                 type: NodeType.Boolean,
+            }
+        }
+
+        const isStringEnum = type.types.every((t) => t.flags & ts.TypeFlags.StringLiteral)
+        if (isStringEnum) {
+            const values = type.types.map((t) => {
+                if (!t.isLiteral()) throw new Error('TypeFlags.StringLiteral is not literal')
+                return t.value as string
+            })
+            return {
+                type: NodeType.Enum,
+                values: values,
+            }
+        }
+
+        const isNumberEnum = type.types.every((t) => t.flags & ts.TypeFlags.NumberLiteral)
+        if (isNumberEnum) {
+            const values = type.types.map((t) => {
+                if (!t.isLiteral()) throw new Error('TypeFlags.NumberLiteral is not literal')
+                return t.value as number
+            })
+            return {
+                type: NodeType.Enum,
+                values: values,
             }
         }
 
@@ -134,7 +160,7 @@ function resolveOptionalUnionProp(union: ts.UnionType): ts.Type {
     // If property is just optional
     if (members.length === 1) {
         return members[0] as ts.Type
-    // If property is optional and a union
+        // If property is optional and a union
     } else {
         // WARN: Mutation can cause problems, but not sure
         union.types = members
