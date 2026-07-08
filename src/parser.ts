@@ -1,3 +1,7 @@
+interface SourceFileWithLocals extends ts.SourceFile {
+    locals?: ts.SymbolTable
+}
+
 import ts from 'typescript'
 
 export enum NodeType {
@@ -17,8 +21,15 @@ export enum NodeType {
 
 interface BaseNode {
     type: NodeType
-    example?: string
+    info?: JSDocInfo
+}
+
+type JSDocInfo = {
     description?: string
+    example?: any
+    format?: string
+    minimum?: number
+    maximum?: number
 }
 
 export interface PrimitiveNode extends BaseNode {}
@@ -58,12 +69,24 @@ export type Node =
     | ArrayNode
     | UnknownNode
 
+class TranslateError extends Error {
+    name: string
+    location: string
+    constructor(message: string, location: string) {
+        super(message)
+        this.name = 'TranslateError'
+        this.location = location
+    }
+}
+
 export function parse(fileName: string) {
     const program = ts.createProgram([fileName], {
+        allowJs: true,
+        checkJs: true,
         target: ts.ScriptTarget.ESNext,
     })
     const checker = program.getTypeChecker()
-    const source = program.getSourceFile(fileName)!
+    const source = program.getSourceFile(fileName)! as SourceFileWithLocals
 
     const rootChildren = source.getChildren()
     const syntaxList = rootChildren[0]!
@@ -71,52 +94,73 @@ export function parse(fileName: string) {
     const tree: Node[] = []
     for (const child of children) {
         const type = checker.getTypeAtLocation(child)
-        tree.push(typeToTree(type, checker))
+        tree.push(typeToTree(type, type.symbol, checker))
+    }
+    if (source.locals) {
+        source.locals.forEach((symbol) => {
+            // Check if it's a TypeAlias (JSDoc typedef)
+            if (symbol.flags & ts.SymbolFlags.TypeAlias) {
+                const type = checker.getDeclaredTypeOfSymbol(symbol)
+                tree.push(typeToTree(type, symbol, checker))
+            }
+        })
     }
     return tree
 }
 
-function typeToTree(type: ts.Type, checker: ts.TypeChecker): Node {
+function generateError(error: string, symbol: ts.Symbol) {
+    const node = symbol.valueDeclaration || symbol.getDeclarations()?.[0]
+    if (!node) return
+    const sf = node.getSourceFile()
+    const pos = sf.getLineAndCharacterOfPosition(node.getStart())
+
+    const sourceFile = node.getSourceFile()
+    const fullError = `${error} on symbol ${symbol.name || 'unknown'}`
+    const location = `${sourceFile.fileName}:${pos.line}:${pos.character}`
+
+    return new TranslateError(fullError, location)
+}
+
+function typeToTree(type: ts.Type, symbol: ts.Symbol | undefined, checker: ts.TypeChecker): Node {
+    let node: Node = { type: NodeType.Unknown }
+
     if (hasSomeFlags(type, [ts.TypeFlags.Undefined])) {
-        return {
-            type: NodeType.Undefined,
+        node = { type: NodeType.Undefined }
+    } else if (hasSomeFlags(type, [ts.TypeFlags.Null])) {
+        node = { type: NodeType.Null }
+    } else if (hasSomeFlags(type, [ts.TypeFlags.StringLike])) {
+        node = { type: NodeType.String }
+    } else if (hasSomeFlags(type, [ts.TypeFlags.NumberLike])) {
+        node = { type: NodeType.Number }
+    } else if (hasSomeFlags(type, [ts.TypeFlags.BooleanLike])) {
+        node = { type: NodeType.Boolean }
+    } else if (type.isUnion()) {
+        node = unionToTree(type, checker)
+    } else if (checker.isArrayType(type)) {
+        node = arrayToTree(type, checker)
+    } else if (checker.isTupleType(type)) {
+        node = tupleToTree(type, checker)
+    } else if (hasSomeFlags(type, [ts.TypeFlags.Object])) {
+        node = objectToTree(type, symbol, checker)
+    }
+    if (symbol) {
+        // Get property documentation
+        const docs = symbol.getDocumentationComment(checker)
+        const docText = docs.map((d) => d.text).join('\n')
+
+        let info: JSDocInfo = {}
+        // For jsdoc typedefs
+        if (symbol.flags & ts.SymbolFlags.TypeAlias) {
+            // Parse metadata from documentation
+            const { description, metadata } = parsePropertyMetadata(docText)
+            info = metadataToJSDocInfo(metadata, description)
+        } else {
+            info = getSymbolJSDocInfo(symbol, node.type, checker)
         }
+
+        if (Object.keys(info).length) return { ...node, info }
     }
-    if (hasSomeFlags(type, [ts.TypeFlags.Null])) {
-        return {
-            type: NodeType.Null,
-        }
-    }
-    if (hasSomeFlags(type, [ts.TypeFlags.StringLike])) {
-        return {
-            type: NodeType.String,
-        }
-    }
-    if (hasSomeFlags(type, [ts.TypeFlags.NumberLike])) {
-        return {
-            type: NodeType.Number,
-        }
-    }
-    if (hasSomeFlags(type, [ts.TypeFlags.BooleanLike])) {
-        return {
-            type: NodeType.Boolean,
-        }
-    }
-    if (type.isUnion()) {
-        return unionToTree(type, checker)
-    }
-    if (checker.isArrayType(type)) {
-        return arrayToTree(type, checker)
-    }
-    if (checker.isTupleType(type)) {
-        return tupleToTree(type, checker)
-    }
-    if (hasSomeFlags(type, [ts.TypeFlags.Object])) {
-        return objectToTree(type, checker)
-    }
-    return {
-        type: NodeType.Unknown,
-    }
+    return node
 }
 
 function hasSomeFlags(type: ts.Type, flags: ts.TypeFlags[]) {
@@ -132,7 +176,7 @@ function arrayToTree(type: ts.Type, checker: ts.TypeChecker): ArrayNode {
     }
     return {
         type: NodeType.Array,
-        items: typeToTree(arrayIndexInfo.type, checker),
+        items: typeToTree(arrayIndexInfo.type, type.symbol, checker),
     }
 }
 
@@ -140,7 +184,7 @@ function tupleToTree(type: ts.Type, checker: ts.TypeChecker): TupleNode {
     const args = checker.getTypeArguments(type as ts.TypeReference)
     return {
         type: NodeType.Tuple,
-        items: args.map((t) => typeToTree(t, checker)),
+        items: args.map((t) => typeToTree(t, type.symbol, checker)),
     }
 }
 
@@ -192,7 +236,7 @@ function unionToTree(type: ts.UnionType, checker: ts.TypeChecker): Node {
 
     const oneOf: Node[] = []
     for (const unionMember of type.types) {
-        oneOf.push(typeToTree(unionMember, checker))
+        oneOf.push(typeToTree(unionMember, type.symbol, checker))
     }
     return {
         type: NodeType.Union,
@@ -200,7 +244,7 @@ function unionToTree(type: ts.UnionType, checker: ts.TypeChecker): Node {
     }
 }
 
-function objectToTree(type: ts.Type, checker: ts.TypeChecker): Node {
+function objectToTree(type: ts.Type, symbol: ts.Symbol | undefined, checker: ts.TypeChecker): Node {
     // Check for index signatures (Records with string OR number keys)
     const indexInfos = checker.getIndexInfosOfType(type)
     const recordIndexInfo = indexInfos.find((info) =>
@@ -211,7 +255,7 @@ function objectToTree(type: ts.Type, checker: ts.TypeChecker): Node {
         // This is a Record type (string or numeric keyed)
         return {
             type: NodeType.Record,
-            items: typeToTree(recordIndexInfo.type, checker),
+            items: typeToTree(recordIndexInfo.type, type.symbol, checker),
         }
     }
 
@@ -227,7 +271,30 @@ function objectToTree(type: ts.Type, checker: ts.TypeChecker): Node {
         } else if (type.isUnion()) {
             type = resolveOptionalUnionProp(type)
         }
-        properties[prop.name] = typeToTree(type, checker)
+
+        const node = typeToTree(type, type.aliasSymbol || type.symbol, checker)
+
+        // Get property documentation
+        const docs = prop.getDocumentationComment(checker)
+        const docText = docs.map((d) => d.text).join('\n')
+
+        let info: JSDocInfo = {}
+        const isTypedef = symbol && symbol.flags & ts.SymbolFlags.TypeAlias
+        if (isTypedef) {
+            const { description, metadata } = parsePropertyMetadata(docText)
+            info = metadataToJSDocInfo(metadata, description)
+        } else {
+            info = getSymbolJSDocInfo(prop, node.type, checker)
+        }
+
+        if (Object.keys(info).length) {
+            properties[prop.name] = {
+                info,
+                ...node,
+            }
+        } else {
+            properties[prop.name] = node
+        }
     }
     return {
         type: NodeType.Object,
@@ -248,4 +315,99 @@ function resolveOptionalUnionProp(union: ts.UnionType): ts.Type {
         union.types = members
         return union
     }
+}
+
+function parsePropertyMetadata(documentation: string): {
+    description?: string
+    metadata: Record<string, string>
+} {
+    const lines = documentation
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l)
+
+    let description = ''
+    const metadata: Record<string, string> = {}
+
+    for (const line of lines) {
+        // Match metadata lines: - key: value
+        const metaMatch = line.match(/^-\s*(\w+):\s*(.+)$/)
+
+        if (metaMatch) {
+            const [_, key, value] = metaMatch
+            metadata[key] = value.trim()
+        } else {
+            description = line
+        }
+    }
+
+    return { description, metadata }
+}
+
+function metadataToJSDocInfo(metadata: Record<string, string>, description?: string): JSDocInfo {
+    const info: JSDocInfo = {}
+
+    if (description) {
+        info.description = description
+    }
+
+    for (const [key, value] of Object.entries(metadata)) {
+        switch (key) {
+            case 'example':
+                try {
+                    info.example = JSON.parse(value)
+                } catch (e) {
+                    // If not valid JSON, use as string
+                    info.example = value
+                }
+                break
+            case 'format':
+                info.format = value
+                break
+            case 'minimum':
+                info.minimum = parseInt(value)
+                break
+            case 'maximum':
+                info.maximum = parseInt(value)
+                break
+            // Add more cases as needed
+        }
+    }
+
+    return info
+}
+
+function getSymbolJSDocInfo(symbol: ts.Symbol, type: NodeType, checker: ts.TypeChecker): JSDocInfo {
+    const info: JSDocInfo = {}
+    const description = symbol.getDocumentationComment(checker)
+    if (description?.[0]?.text) {
+        info.description = description[0].text.replace('\n', ' ').trim()
+    }
+
+    const tagsArr = symbol.getJsDocTags()
+    for (const tag of tagsArr) {
+        if (!tag.text?.[0]?.text) continue
+        const text = tag.text[0].text.replace('\n', ' ').trim()
+
+        switch (tag.name) {
+            case 'example':
+                try {
+                    info.example = JSON.parse(text)
+                } catch (e: any) {
+                    throw generateError('Cannot parse tag @example (should be valid JSON)', symbol)
+                }
+                break
+            case 'format':
+                info.format = text
+                break
+            case 'minimum':
+                info.minimum = parseInt(text)
+                break
+            case 'maximum':
+                info.maximum = parseInt(text)
+                break
+        }
+    }
+
+    return info
 }
