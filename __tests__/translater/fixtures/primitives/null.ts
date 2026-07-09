@@ -1,0 +1,1 @@
+export type NullType = null
