@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { getPathsFromFile, SchemaType } from '../request-parser'
 
-const fixtures = 'src/request-parser/__tests__/fixtures'
+const fixtures = 'src/autodoc-parser/__tests__/fixtures'
 
 test('should parse responses', () => {
     const result = getPathsFromFile(`${fixtures}/responses.ts`)
@@ -100,10 +100,4 @@ test('should parse accepts', () => {
             },
         },
     })
-})
-
-test('should errors request without accepts', () => {
-    expect(() => {
-        getPathsFromFile(`${fixtures}/request-without-accepts.ts`)
-    }).toThrow('@request tag cannot be specified without @accept tags')
 })

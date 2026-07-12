@@ -429,12 +429,11 @@ function getContentFromTagType(fileName: string, tag: commentParser.Spec): OpenA
         )
     }
 
-    const predefined = match[2]
-    if (predefined) {
+    if (match[1]) {
         return {
             schema: {
                 type: SchemaType.Predefined,
-                ref: `#/components/schemas/${predefined}`,
+                ref: `#/components/schemas/${match[2]}`,
             },
         }
     }

@@ -1,7 +1,7 @@
 import ts, { type PseudoBigInt } from 'typescript'
-import * as utils from '@/translater/utils'
-import * as nodes from '@/translater/nodes'
-import * as tags from '@/translater/tags'
+import * as utils from '@/ts-translater/utils'
+import * as nodes from '@/ts-translater/nodes'
+import * as tags from '@/ts-translater/tags'
 import type { Tags } from './tags'
 import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 

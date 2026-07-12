@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Interfaces', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/interfaces'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/interfaces'
 
     test('should parse interface with primitives', () => {
         const [result] = translate(`${fixtures}/interface-with-primitives.ts`)

@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Type Aliases', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/type-aliases'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/type-aliases'
 
     test('should parse type with primitives', () => {
         const [result] = translate(`${fixtures}/type-with-primitives.ts`)

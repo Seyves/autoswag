@@ -1,5 +1,5 @@
 import type ts from 'typescript'
-import * as utils from '@/translater/utils'
+import * as utils from '@/ts-translater/utils'
 import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
 export type Tags = {

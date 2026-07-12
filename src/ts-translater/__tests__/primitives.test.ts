@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Primitives', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/primitives'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/primitives'
 
     test('should translate string type', () => {
         const [result] = translate(`${fixtures}/string.ts`)

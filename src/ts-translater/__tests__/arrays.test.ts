@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Arrays', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/arrays'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/arrays'
 
     test('should translate string array type', () => {
         const [result] = translate(`${fixtures}/string-array.ts`)

@@ -1,6 +1,6 @@
 import ts from 'typescript'
-import { typeToTree } from '@/translater/tree'
-import * as nodes from '@/translater/nodes'
+import { typeToTree } from '@/ts-translater/tree'
+import * as nodes from '@/ts-translater/nodes'
 
 interface SourceFileWithLocals extends ts.SourceFile {
     locals?: ts.SymbolTable
@@ -16,7 +16,7 @@ export function translate(fileName: string) {
     const checker = program.getTypeChecker()
     const source = program.getSourceFile(fileName) as SourceFileWithLocals
 
-    if (!source) throw new Error("Cannot get source file")
+    if (!source) throw new Error('Cannot get source file')
 
     const rootChildren = source.getChildren()
     const syntaxList = rootChildren[0]!

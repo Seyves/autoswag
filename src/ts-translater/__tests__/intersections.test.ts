@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Intersections', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/intersections'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/intersections'
 
     test('should translate intersection of two object types', () => {
         const [result] = translate(`${fixtures}/intersection-of-two-objects.ts`)

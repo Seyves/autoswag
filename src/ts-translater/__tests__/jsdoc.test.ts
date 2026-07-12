@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('JSDoc', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/jsdoc'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/jsdoc'
 
     test('should translate JSDoc typedef with metadata', () => {
         const [result] = translate(`${fixtures}/jsdoc-typedef.js`)

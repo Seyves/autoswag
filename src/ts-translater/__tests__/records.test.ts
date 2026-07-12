@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Records', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/records'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/records'
 
     describe('String-keyed records', () => {
         test('should translate string record with number values', () => {

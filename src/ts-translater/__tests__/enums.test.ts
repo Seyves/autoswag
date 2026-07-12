@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Enums', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/enums'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/enums'
 
     test('should translate string union enum', () => {
         const [result] = translate(`${fixtures}/string-union-enum.ts`)

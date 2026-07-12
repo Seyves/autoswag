@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Error Handling', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/error-cases'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/error-cases'
 
     test('should handle empty file', () => {
         const result = translate(`${fixtures}/empty-file.ts`)

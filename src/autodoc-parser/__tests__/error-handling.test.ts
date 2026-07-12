@@ -2,7 +2,7 @@ import { expect, test, describe } from 'vitest'
 import { getPathsFromFile } from '../request-parser'
 
 describe('Error Handling', () => {
-    const fixtures = 'src/request-parser/__tests__/fixtures/error-cases'
+    const fixtures = 'src/autodoc-parser/__tests__/fixtures/error-cases'
 
     test('should throw on invalid method', () => {
         expect(() => getPathsFromFile(`${fixtures}/invalid-method.ts`)).toThrow(

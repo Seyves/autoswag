@@ -3,7 +3,7 @@ import * as nodes from '../nodes'
 import { translate } from '../translate'
 
 describe('Generics', () => {
-    const fixtures = 'src/translater/__tests__/fixtures/generics'
+    const fixtures = 'src/ts-translater/__tests__/fixtures/generics'
 
     test('should translate resolved array generic', () => {
         const [result] = translate(`${fixtures}/resolved-array-generic.ts`)
