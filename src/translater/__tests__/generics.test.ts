@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Generics', () => {
-    const fixtures = '__tests__/translater/fixtures/generics'
+    const fixtures = 'src/translater/__tests__/fixtures/generics'
 
     test('should translate resolved array generic', () => {
         const [result] = translate(`${fixtures}/resolved-array-generic.ts`)

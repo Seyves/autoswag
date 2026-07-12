@@ -1,6 +1,6 @@
 import type ts from 'typescript'
 import * as utils from '@/translater/utils'
-import { generateError } from './errors'
+import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
 export type Tags = {
     description?: string
@@ -89,7 +89,10 @@ function parseRawTags(symbol: ts.Symbol, rawTags: Record<string, string>): Tags 
                 try {
                     tags.example = JSON.parse(value)
                 } catch (e: any) {
-                    throw generateError('Cannot parse tag @example (should be valid JSON)', symbol)
+                    throw new AutodocError(
+                        `Cannot parse tag @example (should be valid JSON) on symbol ${symbol.name}`,
+                        getLocationFromSymbol(symbol),
+                    )
                 }
                 break
             case 'minimum':

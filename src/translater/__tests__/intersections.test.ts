@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Intersections', () => {
-    const fixtures = '__tests__/translater/fixtures/intersections'
+    const fixtures = 'src/translater/__tests__/fixtures/intersections'
 
     test('should translate intersection of two object types', () => {
         const [result] = translate(`${fixtures}/intersection-of-two-objects.ts`)

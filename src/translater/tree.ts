@@ -3,7 +3,7 @@ import * as utils from '@/translater/utils'
 import * as nodes from '@/translater/nodes'
 import * as tags from '@/translater/tags'
 import type { Tags } from './tags'
-import { generateError } from './errors'
+import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
 interface Context {
     checker: ts.TypeChecker
@@ -48,9 +48,9 @@ export function typeToTree(
     if (type.aliasSymbol && utils.isUserDefinedType(type.aliasSymbol)) {
         const id = (type.aliasSymbol as any).id as number
         if (symbolStack.includes(id)) {
-            throw generateError(
-                'Recursive declaration encountered. To fix this issue, mark recursive type with @component tag',
-                symbol,
+            throw new AutodocError(
+                `Recursive declaration encountered on symbol ${symbol.name}. To fix this issue, mark recursive type with @component tag`,
+                getLocationFromSymbol(symbol),
             )
         } else {
             symbolStack.push(id)

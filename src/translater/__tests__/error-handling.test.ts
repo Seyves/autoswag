@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Error Handling', () => {
-    const fixtures = '__tests__/translater/fixtures/error-cases'
+    const fixtures = 'src/translater/__tests__/fixtures/error-cases'
 
     test('should handle empty file', () => {
         const result = translate(`${fixtures}/empty-file.ts`)

@@ -18,6 +18,7 @@
   },
   "type": "module",
   "dependencies": {
+    "comment-parser": "^1.4.7",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

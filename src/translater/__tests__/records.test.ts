@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Records', () => {
-    const fixtures = '__tests__/translater/fixtures/records'
+    const fixtures = 'src/translater/__tests__/fixtures/records'
 
     describe('String-keyed records', () => {
         test('should translate string record with number values', () => {

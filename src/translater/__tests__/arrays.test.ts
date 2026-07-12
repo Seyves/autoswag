@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Arrays', () => {
-    const fixtures = '__tests__/translater/fixtures/arrays'
+    const fixtures = 'src/translater/__tests__/fixtures/arrays'
 
     test('should translate string array type', () => {
         const [result] = translate(`${fixtures}/string-array.ts`)

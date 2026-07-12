@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('Unions', () => {
-    const fixtures = '__tests__/translater/fixtures/unions'
+    const fixtures = 'src/translater/__tests__/fixtures/unions'
 
     test('should translate union of primitives', () => {
         const [result] = translate(`${fixtures}/union-of-primitives.ts`)

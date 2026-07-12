@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest'
-import * as nodes from '../../src/translater/nodes'
-import { translate } from '../../src/translater/translate'
+import * as nodes from '../nodes'
+import { translate } from '../translate'
 
 describe('JSDoc', () => {
-    const fixtures = '__tests__/translater/fixtures/jsdoc'
+    const fixtures = 'src/translater/__tests__/fixtures/jsdoc'
 
     test('should translate JSDoc typedef with metadata', () => {
         const [result] = translate(`${fixtures}/jsdoc-typedef.js`)

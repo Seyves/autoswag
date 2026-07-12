@@ -1,0 +1,3 @@
+/**
+ * @autodoc MET /something
+ */
