@@ -1,0 +1,3 @@
+/**
+ * @autodoc PATCH /resource/{id}
+ */

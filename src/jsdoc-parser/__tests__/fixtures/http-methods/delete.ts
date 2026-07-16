@@ -1,0 +1,3 @@
+/**
+ * @autodoc DELETE /resource/{id}
+ */

@@ -1,0 +1,3 @@
+/**
+ * @autodoc OPTIONS /resource
+ */

@@ -1,0 +1,3 @@
+/**
+ * @autodoc GET /resource
+ */
