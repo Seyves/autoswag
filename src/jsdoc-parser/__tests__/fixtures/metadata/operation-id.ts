@@ -1,4 +1,4 @@
 /**
- * @autodoc  GET /users
+ * @autodoc GET /users
  * @operationId getUserList
  */

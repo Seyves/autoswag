@@ -252,10 +252,10 @@ function isNonEmptyNode(node: Node): node is Exclude<Node, EmptyNode> {
 }
 
 function isMultiTypeSchema(variants: Node[]): variants is PrimitiveNode[] {
-    const isPrimitives = variants.every((n) => {
+    const isPrimitives = variants.every((n) => (
         // @ts-ignore
         'type' in n && primitiveTypes.includes(n.type)
-    })
+    ))
     if (!isPrimitives) return false
     // Basically checking that all primitives have the same signature
     for (let i = 0; i < variants.length - 1; i++) {

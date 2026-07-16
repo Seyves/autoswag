@@ -42,7 +42,7 @@ const responseNameFormatRegex = /^(\d+)(\.)?(\S+)?$/
  * @example User
  * @example string
  */
-const tagTypeFormatRegex = /^(ref:)?([a-zA-Z0-9_]+)?$/
+const tagTypeFormatRegex = /^(ref:)?([a-zA-Z0-9_-]+)?$/
 
 export function parsePaths(fileName: string) {
     const file = fs.readFileSync(fileName)
@@ -133,7 +133,7 @@ function parseJSDocBlock(
                     in: 'path',
                     name: tag.name,
                     required: true,
-                    schema: contentToParamSchema(getContentFromTagType(fileName, tag)),
+                    schema: getContentFromTagType(fileName, tag),
                 }
                 if (tag.description) {
                     param.description = tag.description
@@ -148,7 +148,7 @@ function parseJSDocBlock(
                     in: 'query',
                     name: tag.name,
                     required: !tag.optional,
-                    schema: contentToParamSchema(getContentFromTagType(fileName, tag)),
+                    schema: getContentFromTagType(fileName, tag),
                 }
                 if (tag.description) {
                     param.description = tag.description
@@ -163,7 +163,7 @@ function parseJSDocBlock(
                     in: 'header',
                     name: tag.name,
                     required: !tag.optional,
-                    schema: contentToParamSchema(getContentFromTagType(fileName, tag)),
+                    schema: getContentFromTagType(fileName, tag),
                 }
                 if (tag.description) {
                     param.description = tag.description
@@ -177,7 +177,7 @@ function parseJSDocBlock(
                     in: 'cookie',
                     name: tag.name,
                     required: !tag.optional,
-                    schema: contentToParamSchema(getContentFromTagType(fileName, tag)),
+                    schema: getContentFromTagType(fileName, tag),
                 }
                 if (tag.description) {
                     param.description = tag.description
@@ -226,7 +226,9 @@ function parseJSDocBlock(
                 }
 
                 if (tag.type) {
-                    request.requestBody.content![contentType] = getContentFromTagType(fileName, tag)
+                    request.requestBody.content![contentType] = {
+                        schema: getContentFromTagType(fileName, tag),
+                    }
                 } else {
                     request.requestBody.content![contentType] = {}
                 }
@@ -270,7 +272,9 @@ function parseJSDocBlock(
                 if (contentType) {
                     if (!response.content) response.content = {}
                     if (tag.type) {
-                        response.content[contentType] = getContentFromTagType(fileName, tag)
+                        response.content[contentType] = {
+                            schema: getContentFromTagType(fileName, tag),
+                        }
                     } else {
                         response.content[contentType] = {}
                     }
@@ -287,7 +291,7 @@ function parseJSDocBlock(
 function getContentFromTagType(
     fileName: string,
     tag: commentParser.Spec,
-): openApiPaths.StaticSchema | TypeReference {
+): openApiPaths.Ref | TypeReference {
     const match = tag.type.match(tagTypeFormatRegex)
     if (!match) {
         throw new AutodocError(
@@ -297,21 +301,8 @@ function getContentFromTagType(
     }
     if (match[1]) {
         return {
-            schema: {
-                $ref: `#/components/schemas/${match[2]}`,
-            },
+            $ref: `#/components/schemas/${match[2]}`,
         }
     }
     return { $tsType: match[0], $fileName: fileName }
-}
-
-// This function is needed because layout of response/body content and params content (called schema)
-// differs then it comes to "components/schemas" references
-function contentToParamSchema(
-    content: openApiPaths.StaticSchema | TypeReference,
-): openApiPaths.StaticSchema['schema'] | TypeReference {
-    if ('schema' in content) {
-        return content.schema
-    }
-    return content
 }

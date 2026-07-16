@@ -1,4 +1,4 @@
 /**
- * @autodoc  GET /users/{id}
+ * @autodoc GET /users/{id}
  * @pathParam {string} id User ID
  */

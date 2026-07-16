@@ -1,0 +1,12 @@
+/**
+ * @component User
+ */
+export interface User {
+    id: string
+    name: string
+    email: string
+    password: string
+    role: 'admin' | 'user'
+    createdAt: string
+    updatedAt: string
+}

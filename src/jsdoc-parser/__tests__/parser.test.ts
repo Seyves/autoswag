@@ -14,8 +14,10 @@ test('should parse responses', () => {
                         description: 'Ok',
                         content: {
                             'application/json': {
-                                $tsType: 'Type',
-                                $fileName: fileName,
+                                schema: {
+                                    $tsType: 'Type',
+                                    $fileName: fileName,
+                                },
                             },
                         },
                     },
@@ -53,8 +55,10 @@ test('should parse accepts without request', () => {
                 requestBody: {
                     content: {
                         'application/json': {
-                            $tsType: 'Type',
-                            $fileName: fileName,
+                            schema: {
+                                $tsType: 'Type',
+                                $fileName: fileName,
+                            },
                         },
                         'text/csv': {
                             schema: {
@@ -80,8 +84,10 @@ test('should parse accepts', () => {
                     description: 'My request',
                     content: {
                         'application/json': {
-                            $tsType: 'Type',
-                            $fileName: fileName,
+                            schema: {
+                                $tsType: 'Type',
+                                $fileName: fileName,
+                            },
                         },
                         'text/csv': {
                             schema: {

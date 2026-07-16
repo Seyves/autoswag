@@ -1,4 +1,4 @@
 /**
- * @autodoc  GET /old-endpoint
+ * @autodoc GET /old-endpoint
  * @deprecated
  */

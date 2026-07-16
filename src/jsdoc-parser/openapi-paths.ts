@@ -1,5 +1,5 @@
-export type StaticSchema = {
-    schema: { $ref: string }
+export type Ref = {
+    $ref: string
 }
 
 export interface Param<T> {
@@ -7,16 +7,20 @@ export interface Param<T> {
     in: string
     description?: string
     required?: boolean
-    schema: T | StaticSchema['schema']
+    schema: T | Ref
+}
+
+export type Content<T> = {
+    schema?: T | Ref
 }
 
 export interface Response<T> {
     description: string
-    content?: Record<string, T | StaticSchema | Record<PropertyKey, never>>
+    content?: Record<string, Content<T>>
 }
 
 export interface RequestBody<T> {
-    content?: Record<string, T | StaticSchema | Record<PropertyKey, never>>
+    content?: Record<string, Content<T>>
     description?: string
     required?: boolean
 }

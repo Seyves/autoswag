@@ -1,4 +1,4 @@
 /**
- * @autodoc  GET /protected
+ * @autodoc GET /protected
  * @security BearerAuth
  */

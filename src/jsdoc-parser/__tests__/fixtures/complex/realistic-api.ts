@@ -1,5 +1,5 @@
 /**
- * @autodoc  GET /api/articles
+ * @autodoc GET /api/articles
  * @operationId listArticles
  * @summary List all articles with pagination
  * @tag Articles
@@ -11,7 +11,7 @@
  */
 
 /**
- * @autodoc  POST /api/articles
+ * @autodoc POST /api/articles
  * @operationId createArticle
  * @summary Create a new article
  * @tag Articles

@@ -1,4 +1,4 @@
 /**
- * @autodoc  GET /ping
+ * @autodoc GET /ping
  * @server https://localhost:3000
  */

@@ -255,5 +255,8 @@ function isNullableUnion(variants: Node[]) {
 }
 
 function resolveNullableUnion(variants: Node[]): Node {
-    return variants.find((n) => !('nullable' in n && n.nullable))!
+    return {
+        ...variants.find((n) => !('nullable' in n && n.nullable))!,
+        nullable: true,
+    }
 }

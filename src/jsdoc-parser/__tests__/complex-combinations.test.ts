@@ -65,8 +65,10 @@ describe('Complex Combinations', () => {
                         description: 'Post data',
                         content: {
                             'application/json': {
-                                $tsType: 'PostData',
-                                $fileName: fileName,
+                                schema: {
+                                    $tsType: 'PostData',
+                                    $fileName: fileName,
+                                },
                             },
                         },
                     },
@@ -75,8 +77,10 @@ describe('Complex Combinations', () => {
                             description: 'Post created successfully',
                             content: {
                                 'application/json': {
-                                    $tsType: 'Post',
-                                    $fileName: fileName,
+                                    schema: {
+                                        $tsType: 'Post',
+                                        $fileName: fileName,
+                                    },
                                 },
                             },
                         },
@@ -84,8 +88,10 @@ describe('Complex Combinations', () => {
                             description: 'Invalid input',
                             content: {
                                 'application/json': {
-                                    $tsType: 'Error',
-                                    $fileName: fileName,
+                                    schema: {
+                                        $tsType: 'Error',
+                                        $fileName: fileName,
+                                    },
                                 },
                             },
                         },
@@ -101,18 +107,18 @@ describe('Complex Combinations', () => {
     test('should parse realistic REST API with multiple endpoints', () => {
         const fileName = `${fixtures}/realistic-api.ts`
         const result = parsePaths(fileName)
-        
+
         // Test first endpoint
         expect(result['/api/articles']!.get).toMatchObject({
             operationId: 'listArticles',
             summary: 'List all articles with pagination',
             tags: ['Articles'],
         })
-        
+
         expect(result['/api/articles']!.get.parameters).toHaveLength(3)
         expect(result['/api/articles']!.get.responses).toHaveProperty('200')
         expect(result['/api/articles']!.get.responses).toHaveProperty('400')
-        
+
         // Test second endpoint
         expect(result['/api/articles']!.post).toMatchObject({
             operationId: 'createArticle',
@@ -120,7 +126,7 @@ describe('Complex Combinations', () => {
             tags: ['Articles'],
             deprecated: true,
         })
-        
+
         expect(result['/api/articles']!.post.security).toBeDefined()
         expect(result['/api/articles']!.post.requestBody).toBeDefined()
         expect(result['/api/articles']!.post.requestBody!.required).toBe(true)
@@ -131,7 +137,7 @@ describe('Complex Combinations', () => {
     test('should handle request body with content types', () => {
         const fileName = `${fixtures}/full-endpoint.ts`
         const result = parsePaths(fileName)
-        
+
         const requestBody = result['/api/v1/users/{id}/posts']!.post.requestBody
         expect(requestBody).toBeDefined()
         expect(requestBody!.required).toBe(true)
@@ -142,13 +148,13 @@ describe('Complex Combinations', () => {
     test('should handle responses with and without content', () => {
         const fileName = `${fixtures}/full-endpoint.ts`
         const result = parsePaths(fileName)
-        
+
         const responses = result['/api/v1/users/{id}/posts']!.post.responses!
-        
+
         // Response with content
         expect(responses[201]).toHaveProperty('content')
         expect(responses[201]!.content).toHaveProperty('application/json')
-        
+
         // Response without content
         expect(responses[401]).not.toHaveProperty('content')
         expect(responses[401]!.description).toBe('Unauthorized')
