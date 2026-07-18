@@ -45,10 +45,4 @@ describe('Error Handling', () => {
             `@response tag should contain description`,
         )
     })
-
-    test('should throw on invalid type reference', () => {
-        expect(() => parsePaths(`${fixtures}/invalid-type-reference.ts`)).toThrow(
-            `@pathParam tag contains invalid type reference: "invalid type"`,
-        )
-    })
 })

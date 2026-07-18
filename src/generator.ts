@@ -46,13 +46,9 @@ interface GeneratorContext {
     debug?: boolean
 }
 
-export function generate(
-    config: Config<OpenApiVersion.v30>,
-): OpenApiDocument<openApiV30.Node>
+export function generate(config: Config<OpenApiVersion.v30>): OpenApiDocument<openApiV30.Node>
 
-export function generate(
-    config: Config<OpenApiVersion.v31>,
-): OpenApiDocument<openApiV31.Node>
+export function generate(config: Config<OpenApiVersion.v31>): OpenApiDocument<openApiV31.Node>
 
 export function generate(config: Config<OpenApiVersion>) {
     const files = globSync(config.source)
@@ -165,13 +161,18 @@ function resolveTypeReference(ctx: GeneratorContext, ref: TypeReference): any {
         return resolved
     }
 
-    const tree = tsParser.parse(
-        ctx.program,
-        ctx.rawComponents,
-        ref.$fileName,
-        ref.$tsType,
-        ctx.debug,
-    )
+    let tree: tsNodes.Node | undefined
+    if (ref.$isExpr) {
+        tree = tsParser.parseTypeExpression(
+            ctx.program,
+            ctx.rawComponents,
+            ref.$fileName,
+            ref.$tsType,
+            ctx.debug,
+        )
+    } else {
+        tree = tsParser.parse(ctx.program, ctx.rawComponents, ref.$fileName, ref.$tsType, ctx.debug)
+    }
 
     if (!tree) {
         throw new Error(`Cannot resolve type: ${ref.$tsType} in ${ref.$fileName}`)

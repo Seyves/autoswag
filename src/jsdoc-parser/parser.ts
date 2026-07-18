@@ -37,7 +37,7 @@ const responseNameFormatRegex = /^(\d+)(\.)?(\S+)?$/
  * Used to parse type references.
  * Reference could be prefixed with 'ref' to tell
  * that a type is predefined manually in the components.schemas
- * and we don't need to parse Typescript defenitions
+ * and we don't need to parse Typescript definitions
  * @example ref.MultipartRequest
  * @example User
  * @example string
@@ -293,16 +293,22 @@ function getContentFromTagType(
     tag: commentParser.Spec,
 ): openApiPaths.Ref | TypeReference {
     const match = tag.type.match(tagTypeFormatRegex)
-    if (!match) {
-        throw new AutodocError(
-            `@${tag.tag} tag contains invalid type reference: "${tag.type}"`,
-            getLocationFromLine(fileName, tag.source),
-        )
-    }
-    if (match[1]) {
+    // If static $ref or type definition reference
+    if (match) {
+        if (match[1]) {
+            return {
+                $ref: `#/components/schemas/${match[2]}`,
+            }
+        }
         return {
-            $ref: `#/components/schemas/${match[2]}`,
+            $tsType: match[0],
+            $fileName: fileName,
         }
     }
-    return { $tsType: match[0], $fileName: fileName }
+    // if type expression
+    return {
+        $tsType: tag.type,
+        $fileName: fileName,
+        $isExpr: true,
+    }
 }

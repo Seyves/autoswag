@@ -34,6 +34,7 @@ export function parse(
         }
         const type = checker.getTypeAtLocation(child)
         let symbol = type.symbol
+
         // For type alias declarations, get the symbol from the name node
         // because type.symbol points to the anonymous type literal, not the alias
         if (child.kind === ts.SyntaxKind.TypeAliasDeclaration) {
@@ -48,27 +49,110 @@ export function parse(
     if (source.locals) {
         const symbol = source.locals.get(ts.escapeLeadingUnderscores(typeName))
         if (!symbol) return
+
         // Check if it's a TypeAlias (JSDoc typedef)
         if (symbol.flags & ts.SymbolFlags.TypeAlias) {
             const type = checker.getDeclaredTypeOfSymbol(symbol)
             return typeToTree(ctx, [], type, symbol)
         }
-        const decl = symbol.declarations?.[0]
+
         // Check if it's an import
+        const decl = symbol.declarations?.[0]
         if (!decl || !ts.isImportSpecifier(decl)) return
+
         const importDecl = decl.parent.parent.parent
         const isJSDocImport = !ts.isImportDeclaration(importDecl)
 
         if (isJSDocImport) {
             // JSDoc @import - use getTypeAtLocation which properly resolves JSDoc imports
             const type = checker.getTypeAtLocation(decl)
-            const resSymbol = type.aliasSymbol
-            return typeToTree(ctx, [], type, resSymbol)
+            return typeToTree(ctx, [], type, type.aliasSymbol)
         } else {
             // Regular TypeScript import - use getAliasedSymbol
             const resSymbol = checker.getAliasedSymbol(symbol)
             const type = checker.getDeclaredTypeOfSymbol(resSymbol)
+
             return typeToTree(ctx, [], type, resSymbol)
         }
     }
+}
+
+/**
+ * Function takes a typeExpression and return a node for it.
+ * The main usecase is to parse type expressions specified in JSDoc itself:
+ * example: @response {Record<string, User>} 200 Ok
+ */
+export function parseTypeExpression(
+    program: ts.Program,
+    components: Record<string, nodes.Node>,
+    fileName: string,
+    typeExpression: string,
+    debug?: boolean,
+): nodes.Node | undefined {
+    const sourceFile = program.getSourceFile(fileName)
+
+    if (!sourceFile) {
+        throw new Error(`Source file not found: ${fileName}`)
+    }
+
+    const originalText = sourceFile.getFullText()
+    const newText = `${originalText}\ntype __AutodocInlineType = ${typeExpression}`
+
+    const updatedSource = ts.createSourceFile(fileName, newText, sourceFile.languageVersion, true)
+
+    const oldOptions = program.getCompilerOptions()
+    const host = ts.createCompilerHost(oldOptions)
+
+    const originalGetSourceFile = host.getSourceFile
+
+    // Override to return our modified source for the target file
+    host.getSourceFile = (fname, languageVersion, onError, shouldCreateNewSourceFile) => {
+        // Return our modified source for the target file
+        if (fname === fileName) {
+            return updatedSource
+        }
+        // For all other files, reuse from the existing program (no re-reading/re-parsing)
+        const cachedSource = program.getSourceFile(fname)
+        if (cachedSource) {
+            return cachedSource
+        }
+        // Fallback: read from disk (for files not yet in the program)
+        return originalGetSourceFile.call(
+            host,
+            fname,
+            languageVersion,
+            onError,
+            shouldCreateNewSourceFile,
+        )
+    }
+
+    // Create new program with incremental reuse
+    // The 4th argument (oldProgram) enables TypeScript to reuse:
+    // - Cached source files (from our override)
+    // - Type information for unchanged files
+    // - Module resolution results
+    const newProgram = ts.createProgram(program.getRootFileNames(), oldOptions, host, program)
+
+    const newChecker = newProgram.getTypeChecker()
+
+    const newSourceFile = newProgram.getSourceFile(fileName)
+    if (!newSourceFile) {
+        throw new Error(`Updated source file not found: ${fileName}`)
+    }
+
+    const typeAlias = newSourceFile.statements[newSourceFile.statements.length - 1]
+
+    if (!typeAlias || !ts.isTypeAliasDeclaration(typeAlias)) {
+        throw new Error(`Invalid type expression: ${typeExpression}`)
+    }
+
+    const resolvedType = newChecker.getTypeAtLocation(typeAlias.type)
+
+    const ctx: Context = {
+        checker: newChecker,
+        components,
+        debug: Boolean(debug),
+    }
+
+    return typeToTree(ctx, [], resolvedType)
 }

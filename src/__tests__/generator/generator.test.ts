@@ -156,6 +156,52 @@ describe('Generator - Basic Orchestration', () => {
             expect(result.components.schemas).toHaveProperty('User')
             expect(result.components.schemas).not.toHaveProperty('LegacyUserFormat')
         })
+
+        test('should handle imported type expressions', () => {
+            const files = [`${fixtures}/simple/imported-type-expression.ts`]
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
+
+            const responseArr = result.paths['/users']!.get.responses![200]
+            const contentArr = responseArr.content!['application/json']
+            expect(contentArr.schema).toStrictEqual({
+                type: 'array',
+                items: {
+                    $ref: '#/components/schemas/User',
+                },
+            })
+
+            const responseMap = result.paths['/users/map']!.get.responses![200]
+            const contentMap = responseMap.content!['application/json']
+            expect(contentMap.schema).toStrictEqual({
+                type: 'object',
+                additionalProperties: {
+                    $ref: '#/components/schemas/User',
+                },
+            })
+        })
+
+        test('should handle type expressions', () => {
+            const files = [`${fixtures}/simple/type-expression.ts`]
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
+
+            const responseArr = result.paths['/users']!.get.responses![200]
+            const contentArr = responseArr.content!['application/json']
+            expect(contentArr.schema).toStrictEqual({
+                type: 'array',
+                items: {
+                    $ref: '#/components/schemas/User',
+                },
+            })
+
+            const responseMap = result.paths['/users/map']!.get.responses![200]
+            const contentMap = responseMap.content!['application/json']
+            expect(contentMap.schema).toStrictEqual({
+                type: 'object',
+                additionalProperties: {
+                    $ref: '#/components/schemas/User',
+                },
+            })
+        })
     })
 
     describe('Empty and Edge Cases', () => {
