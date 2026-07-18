@@ -8,7 +8,7 @@ interface User {
 
 /**
  * @autodoc POST /users
- * @request required User data
+ * @body required User data
  * @accept {User} application/json
  * @accept {ref:LegacyUserFormat} application/xml
  * @response {User} 201 User created

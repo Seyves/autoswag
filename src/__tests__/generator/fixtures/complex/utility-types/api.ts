@@ -23,7 +23,7 @@ type UpdateUserRequest = Partial<Pick<User, 'name' | 'email'>>
 
 /**
  * @autodoc POST /users
- * @request required User data
+ * @body required User data
  * @accept {CreateUserRequest} application/json
  * @response {PublicUser} 201 User created
  */
@@ -31,7 +31,7 @@ type UpdateUserRequest = Partial<Pick<User, 'name' | 'email'>>
 /**
  * @autodoc PATCH /users/{id}
  * @pathParam {string} id User ID
- * @request required User updates
+ * @body required User updates
  * @accept {UpdateUserRequest} application/json
  * @response {PublicUser} 200 User updated
  */

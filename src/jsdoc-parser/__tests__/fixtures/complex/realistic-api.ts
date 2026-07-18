@@ -16,7 +16,7 @@
  * @summary Create a new article
  * @tag Articles
  * @security OAuth2 write:articles
- * @request required Article data
+ * @body required Article data
  * @accept {ref:ArticleInput} application/json
  * @response {Article} 201.application/json Article created
  * @response {ValidationError} 422.application/json Validation failed

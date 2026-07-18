@@ -13,7 +13,7 @@ interface User {
 
 /**
  * @autodoc POST /users
- * @request required User data
+ * @body required User data
  * @accept {User} application/json
  * @response {User} 201 User created
  */
@@ -21,7 +21,7 @@ interface User {
 /**
  * @autodoc PUT /users/{id}
  * @pathParam {string} id User ID
- * @request required User data
+ * @body required User data
  * @accept {User} application/json
  * @response {User} 200 User updated
  */

@@ -1,6 +1,6 @@
 /**
  * @autodoc PUT /something
- * @request required My request
+ * @body required My request
  * @accept  {Type}        application/json 
  * @accept  {ref:CSVResp} text/csv
  * @accept                text/plain

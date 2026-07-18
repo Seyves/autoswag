@@ -47,7 +47,7 @@ test('should parse responses', () => {
 })
 
 test('should parse accepts without request', () => {
-    const fileName = `${fixtures}/accepts-without-request.ts`
+    const fileName = `${fixtures}/accepts-without-body.ts`
     const result = parsePaths(fileName)
     expect(result).toStrictEqual({
         '/something': {

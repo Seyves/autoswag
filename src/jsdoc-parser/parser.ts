@@ -19,7 +19,7 @@ enum Tags {
     QueryParam = 'queryParam',
     HeaderParam = 'headerParam',
     CookieParam = 'cookieParam',
-    Request = 'request',
+    Body = 'body',
     Accept = 'accept',
     Response = 'response',
 }
@@ -186,10 +186,10 @@ function parseJSDocBlock(
                 break
             }
 
-            case Tags.Request:
+            case Tags.Body:
                 if (block.tags.every((tag) => tag.tag !== Tags.Accept)) {
                     throw new AutodocError(
-                        `@request tag cannot be specified without @accept tags`,
+                        `@body tag cannot be specified without @accept tags`,
                         getLocationFromLine(fileName, tag.source),
                     )
                 }
@@ -208,7 +208,7 @@ function parseJSDocBlock(
                         break
                     default:
                         throw new AutodocError(
-                            `@request tag should contain "optional" or "required" right after declaration`,
+                            `@body tag should contain "optional" or "required" right after declaration`,
                             getLocationFromLine(fileName, tag.source),
                         )
                 }

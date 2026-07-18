@@ -2,13 +2,14 @@ import ts, { type PseudoBigInt } from 'typescript'
 import * as utils from '@/typescript-parser/utils'
 import * as nodes from '@/typescript-parser/nodes'
 import * as tags from '@/typescript-parser/tags'
-import type { Tags } from './tags'
+import type { Meta } from './tags'
 import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
-interface Context {
+export interface Context {
     checker: ts.TypeChecker
-    // Map for the types that marked as swagger components
+    /** Map for the types that marked as swagger components */
     components: Record<string, nodes.Node>
+    debug: boolean
 }
 
 // Main entry point for every unknown node
@@ -20,11 +21,16 @@ export function typeToTree(
 ): nodes.Node {
     symbolStack = [...symbolStack]
     symbol = symbol || type.aliasSymbol || type.symbol
+
     let node: nodes.Node = { type: nodes.Kind.Unknown }
-    let info: Tags = {}
+    let info: Meta = {}
     let component: string | undefined
 
     if (symbol) {
+        if (ctx.debug) {
+            console.debug('[ts-parser]', `processing type with definition '${symbol.name}'`)
+            console.debug('[ts-parser]', `symbol flags: ${symbol.flags}, type flags: ${type.flags}`)
+        }
         // Get declaration documentation
         info = tags.parseSymbolJSDoc(ctx.checker, symbol, symbol)
         component = info.component
@@ -43,6 +49,9 @@ export function typeToTree(
                 ctx.components[component] = node
             }
         }
+    } else if (ctx.debug) {
+        console.debug('[ts-parser]', `processing type with no definition`)
+        console.debug('[ts-parser]', `type flags: ${type.flags}`)
     }
 
     // Check for circle dependencies

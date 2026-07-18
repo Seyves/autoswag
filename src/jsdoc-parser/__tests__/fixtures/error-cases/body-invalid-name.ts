@@ -1,5 +1,5 @@
 /**
  * @autodoc PUT /something
- * @request 
+ * @body 
  * @accept  text/plain
  */

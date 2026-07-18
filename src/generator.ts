@@ -10,10 +10,25 @@ import ts from 'typescript'
 import { isTypeReference, type TypeReference } from '@/common/type-reference'
 import * as tsNodes from '@/typescript-parser/nodes'
 import type { Request } from './jsdoc-parser/openapi-paths'
+import { globSync } from 'tinyglobby'
+import path from 'path'
 
 export enum OpenApiVersion {
     v30 = '3.0.0',
     v31 = '3.1.0',
+}
+
+interface Config<V extends OpenApiVersion> {
+    /** Where to search for source files (array of glob patterns) */
+    source: string[]
+    /** Base openapi document */
+    baseDoc?: any
+    /** Version of Openapi, defaults to 3.1.0 */
+    version?: V
+    /** Override you project typescript config */
+    compilerOptions?: ts.CompilerOptions
+    /** Debug mode for verbose logging */
+    debug?: boolean
 }
 
 interface OpenApiDocument<T> {
@@ -24,77 +39,88 @@ interface OpenApiDocument<T> {
     }
 }
 
-export function generateOpenApiDoc(
-    files: string[],
-    version: OpenApiVersion.v30,
+interface GeneratorContext {
+    program: ts.Program
+    rawComponents: Record<string, tsNodes.Node>
+    version: OpenApiVersion
+    debug?: boolean
+}
+
+export function generate(
+    config: Config<OpenApiVersion.v30>,
 ): OpenApiDocument<openApiV30.Node>
 
-export function generateOpenApiDoc(
-    files: string[],
-    version: OpenApiVersion.v31,
+export function generate(
+    config: Config<OpenApiVersion.v31>,
 ): OpenApiDocument<openApiV31.Node>
 
-export function generateOpenApiDoc(files: string[], version: OpenApiVersion) {
-    const program = ts.createProgram(files, {
-        allowJs: true,
-        checkJs: true,
-        target: ts.ScriptTarget.ESNext,
-    })
+export function generate(config: Config<OpenApiVersion>) {
+    const files = globSync(config.source)
 
-    const components: Record<string, tsNodes.Node> = {}
-
-    const unresolvedPaths: Record<string, Record<string, jsdocParser.Request>> = {}
-    for (const file of files) {
-        const paths = jsdocParser.parsePaths(file)
-        Object.assign(unresolvedPaths, paths)
+    const ctx: GeneratorContext = {
+        version: config.version || OpenApiVersion.v31,
+        program: ts.createProgram(files, config.compilerOptions || getProjectTSOptions()),
+        rawComponents: {},
+        debug: Boolean(config.debug),
     }
 
-    const resolvedPaths: Record<
-        string,
-        Record<string, Request<openApiV30.Node | openApiV31.Node>>
-    > = {}
-    for (const path in unresolvedPaths) {
-        if (!resolvedPaths[path]) resolvedPaths[path] = {}
+    const rawPaths: Record<string, Record<string, jsdocParser.Request>> = {}
+    for (const file of files) {
+        const paths = jsdocParser.parsePaths(file)
+        Object.assign(rawPaths, paths)
+    }
 
-        for (const method in unresolvedPaths[path]) {
-            const req = unresolvedPaths[path][method]!
-            resolvedPaths[path]![method] = resolveRequest(req, program, components, version)
+    const paths: Record<string, Record<string, Request<openApiV30.Node | openApiV31.Node>>> = {}
+    for (const path in rawPaths) {
+        if (!paths[path]) paths[path] = {}
+
+        for (const method in rawPaths[path]) {
+            const req = rawPaths[path][method]!
+            paths[path]![method] = resolveRequest(ctx, req)
         }
     }
 
-    const resolvedComponents: Record<string, openApiV30.Node | openApiV31.Node> = {}
-    for (const component in components) {
-        resolvedComponents[component] = tsNodeToOpenApi(components[component]!, version)
+    let components: Record<string, openApiV30.Node | openApiV31.Node> = {}
+    for (const component in ctx.rawComponents) {
+        components[component] = tsNodeToOpenApi(ctx.rawComponents[component]!, ctx.version)
     }
 
-    const document: OpenApiDocument<openApiV31.Node | openApiV30.Node> = {
-        openapi: version,
-        paths: resolvedPaths,
+    let document: OpenApiDocument<openApiV31.Node | openApiV30.Node> = {
+        openapi: ctx.version,
+        paths: paths,
         components: {
-            schemas: resolvedComponents,
+            schemas: components,
         },
     }
+
+    // Deep merge would be overkill here
+    if (config.baseDoc) {
+        const baseDoc = structuredClone(config.baseDoc)
+        document = { ...document, ...baseDoc }
+
+        if (config.baseDoc.components) {
+            document.components = { ...document.components, ...baseDoc.components }
+
+            if (config.baseDoc.components.schemas) {
+                document.components.schemas = {
+                    ...document.components.schemas,
+                    ...baseDoc.components.schemas,
+                }
+            }
+        }
+    }
+
     return document
 }
 
-function resolveRequest(
-    req: jsdocParser.Request,
-    program: ts.Program,
-    components: Record<string, any>,
-    version: OpenApiVersion,
-): Request<any> {
+function resolveRequest(ctx: GeneratorContext, req: jsdocParser.Request): Request<any> {
     // Resolve params
     if (req.parameters) {
         for (let i = 0; i < req.parameters.length; i++) {
             const param = req.parameters[i]!
             if (!isTypeReference(param.schema)) continue
 
-            req.parameters[i]!.schema = resolveTypeReference(
-                param.schema,
-                program,
-                components,
-                version,
-            )
+            req.parameters[i]!.schema = resolveTypeReference(ctx, param.schema)
         }
     }
 
@@ -104,7 +130,7 @@ function resolveRequest(
             const content = req.requestBody.content[contentType]!
             if (!isTypeReference(content.schema)) continue
 
-            const resolved = resolveTypeReference(content.schema, program, components, version)
+            const resolved = resolveTypeReference(ctx, content.schema)
             req.requestBody.content[contentType]!.schema = resolved
         }
     }
@@ -118,7 +144,7 @@ function resolveRequest(
                 const content = resp.content[contentType]!
                 if (!isTypeReference(content.schema)) continue
 
-                const resolved = resolveTypeReference(content.schema, program, components, version)
+                const resolved = resolveTypeReference(ctx, content.schema)
                 req.responses[code]!.content![contentType]!.schema = resolved
             }
         }
@@ -127,14 +153,9 @@ function resolveRequest(
     return req
 }
 
-function resolveTypeReference(
-    ref: TypeReference,
-    program: ts.Program,
-    components: Record<string, any>,
-    version: OpenApiVersion,
-): any {
+function resolveTypeReference(ctx: GeneratorContext, ref: TypeReference): any {
     const resolvePrimitiveOrFormat =
-        version === OpenApiVersion.v30
+        ctx.version === OpenApiVersion.v30
             ? openApiV30.resolvePrimitiveOrFormat
             : openApiV31.resolvePrimitiveOrFormat
 
@@ -144,13 +165,19 @@ function resolveTypeReference(
         return resolved
     }
 
-    const tree = tsParser.parse(program, components, ref.$fileName, ref.$tsType)
+    const tree = tsParser.parse(
+        ctx.program,
+        ctx.rawComponents,
+        ref.$fileName,
+        ref.$tsType,
+        ctx.debug,
+    )
 
     if (!tree) {
         throw new Error(`Cannot resolve type: ${ref.$tsType} in ${ref.$fileName}`)
     }
 
-    const openApiNode = tsNodeToOpenApi(tree, version)
+    const openApiNode = tsNodeToOpenApi(tree, ctx.version)
 
     return openApiNode
 }
@@ -159,4 +186,24 @@ function tsNodeToOpenApi(node: tsNodes.Node, version: OpenApiVersion) {
     const treeToOpenApi =
         version === OpenApiVersion.v30 ? openApiV30.treeToOpenApi : openApiV31.treeToOpenApi
     return treeToOpenApi(node)
+}
+
+export function getProjectTSOptions(): ts.CompilerOptions {
+    let cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'tsconfig.json')
+    if (!cfgPath) {
+        cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'jsconfig.json')
+    }
+    if (!cfgPath) {
+        throw new Error('Cannot find tsconfig.json or jsconfig.json in the project')
+    }
+    const configFile = ts.readConfigFile(cfgPath, ts.sys.readFile)
+
+    const parsed = ts.parseJsonConfigFileContent(
+        configFile.config,
+        ts.sys,
+        path.dirname(cfgPath),
+        undefined,
+        cfgPath,
+    )
+    return parsed.options
 }

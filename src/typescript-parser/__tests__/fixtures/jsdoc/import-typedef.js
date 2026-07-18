@@ -1,4 +1,4 @@
-/** @import {User} from "./jsdoc-typedef.js" */
+/** @import {User} from "./jsdoc-typedef" */
 
 /** @param {User} sosal */
 function a(sosal) {

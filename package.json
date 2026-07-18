@@ -1,10 +1,13 @@
 {
-  "name": "easydoc",
+  "name": "swagger-autodoc",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Generate swagger documentation with automatically parsed components schemas from you .ts files!",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "build": "tsc && tsc-alias",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +22,23 @@
   "type": "module",
   "dependencies": {
     "comment-parser": "^1.4.7",
+    "tinyglobby": "^0.2.17",
     "typescript": "^6.0.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/generator.d.ts",
+      "default": "./dist/generator.js"
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
+    "tsc-alias": "^1.9.1",
     "tsx": "^4.23.0",
-    "vitest": "^4.1.9"
+    "vitepress": "2.0.0-alpha.18",
+    "vitepress-plugin-group-icons": "^1.7.5",
+    "vitest": "^4.1.9",
+    "zod": "^4.4.3"
   }
 }

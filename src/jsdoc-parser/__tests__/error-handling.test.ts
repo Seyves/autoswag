@@ -17,14 +17,14 @@ describe('Error Handling', () => {
     })
 
     test('should throw on request without no accepts', () => {
-        expect(() => parsePaths(`${fixtures}/request-without-accepts.ts`)).toThrow(
-            '@request tag cannot be specified without @accept tags',
+        expect(() => parsePaths(`${fixtures}/body-without-accepts.ts`)).toThrow(
+            '@body tag cannot be specified without @accept tags',
         )
     })
 
     test('should throw on request with invalid name', () => {
-        expect(() => parsePaths(`${fixtures}/request-invalid-name.ts`)).toThrow(
-            `@request tag should contain "optional" or "required" right after declaration`,
+        expect(() => parsePaths(`${fixtures}/body-invalid-name.ts`)).toThrow(
+            `@body tag should contain "optional" or "required" right after declaration`,
         )
     })
 

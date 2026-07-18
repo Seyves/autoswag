@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest'
-import { generateOpenApiDoc, OpenApiVersion } from '../../generator'
+import { generate, OpenApiVersion } from '../../generator'
 
 describe('Generator - Component Management', () => {
     const fixtures = 'src/__tests__/generator/fixtures'
@@ -7,7 +7,7 @@ describe('Generator - Component Management', () => {
     describe('@component Tag Requirement', () => {
         test('should create component only when @component tag is present', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User has @component tag, should be in components
             expect(result.components.schemas).toHaveProperty('User')
@@ -15,7 +15,7 @@ describe('Generator - Component Management', () => {
 
         test('should inline types without @component tag', () => {
             const files = [`${fixtures}/edge-cases/types-without-component-tag.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User has NO @component tag, should NOT be in components
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
@@ -31,7 +31,7 @@ describe('Generator - Component Management', () => {
 
         test('should mix components and inline types correctly', () => {
             const files = [`${fixtures}/edge-cases/mixed-component-and-inline.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User has @component tag
             expect(result.components.schemas).toHaveProperty('User')
@@ -56,7 +56,7 @@ describe('Generator - Component Management', () => {
     describe('Component Deduplication', () => {
         test('should not duplicate components when type is used multiple times', () => {
             const files = [`${fixtures}/edge-cases/same-type-multiple-uses.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User is used in 4 endpoints but should only appear once
             const userSchemas = Object.keys(result.components.schemas).filter((k) => k === 'User')
@@ -65,7 +65,7 @@ describe('Generator - Component Management', () => {
 
         test('should reuse same component reference across endpoints', () => {
             const files = [`${fixtures}/edge-cases/same-type-multiple-uses.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const expectedRef = { schema: { $ref: '#/components/schemas/User' } }
 
@@ -97,7 +97,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User is used in both users and posts, should only appear once
             const userSchemas = Object.keys(result.components.schemas).filter((k) => k === 'User')
@@ -108,7 +108,7 @@ describe('Generator - Component Management', () => {
     describe('Component Naming', () => {
         test('should use TypeScript type name as component name', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).toHaveProperty('User')
             expect(result.components.schemas).not.toHaveProperty('user')
@@ -120,7 +120,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/complex/generic-types/api.ts`,
                 `${fixtures}/complex/generic-types/response.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).toHaveProperty('UserResponse')
             expect(result.components.schemas).toHaveProperty('UserListResponse')
@@ -131,7 +131,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/complex/utility-types/api.ts`,
                 `${fixtures}/complex/utility-types/base.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).toHaveProperty('PublicUser')
             expect(result.components.schemas).toHaveProperty('CreateUserRequest')
@@ -145,7 +145,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Both User and nested UserProfile have @component tags
             expect(result.components.schemas).toHaveProperty('User')
@@ -157,7 +157,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const user = result.components.schemas.User as any
             expect(user.properties.profile).toEqual({
@@ -167,7 +167,7 @@ describe('Generator - Component Management', () => {
 
         test('should inline nested types without @component', () => {
             const files = [`${fixtures}/edge-cases/types-without-component-tag.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User type is inlined, not extracted
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
@@ -177,21 +177,29 @@ describe('Generator - Component Management', () => {
     describe('Primitives Never Create Components', () => {
         test('should not create components for primitive types', () => {
             const files = [`${fixtures}/simple/primitives-only.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
         })
 
         test('should not create components for format types', () => {
             const files = [`${fixtures}/simple/with-formats.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
         })
 
+        test('should resolve primitives correctly', () => {
+            const files = [`${fixtures}/simple/primitives-only.ts`]
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
+
+            const requestBody = result.paths['/echo']!.post.requestBody!
+            expect(requestBody.content!['text/plain'].schema).toEqual({ type: 'string' })
+        })
+
         test('should inline primitives in parameters', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const param = result.paths['/users/{id}']!.get.parameters![0]!
             expect(param.schema).toEqual({ type: 'string' })
@@ -202,7 +210,7 @@ describe('Generator - Component Management', () => {
     describe('Array and Union Types', () => {
         test('should create component for array type with @component', () => {
             const files = [`${fixtures}/edge-cases/array-types.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Both User and UserList have @component tags
             expect(result.components.schemas).toHaveProperty('User')
@@ -219,7 +227,7 @@ describe('Generator - Component Management', () => {
 
         test('should create components for union type variants with @component', () => {
             const files = [`${fixtures}/edge-cases/union-types.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).toHaveProperty('SuccessResponse')
             expect(result.components.schemas).toHaveProperty('ErrorResponse')
@@ -228,7 +236,7 @@ describe('Generator - Component Management', () => {
 
         test('should reference union variants in oneOf', () => {
             const files = [`${fixtures}/edge-cases/union-types.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const apiResponse = result.components.schemas.ApiResponse as any
             expect(apiResponse).toHaveProperty('oneOf')
@@ -244,7 +252,7 @@ describe('Generator - Component Management', () => {
     describe('ref: Prefix Handling', () => {
         test('should not create components for ref: prefixed types', () => {
             const files = [`${fixtures}/simple/mixed-refs-and-types.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).not.toHaveProperty('LegacyUserFormat')
             expect(result.components.schemas).toHaveProperty('User') // User has @component
@@ -252,7 +260,7 @@ describe('Generator - Component Management', () => {
 
         test('should preserve $ref links for ref: prefixed types', () => {
             const files = [`${fixtures}/simple/mixed-refs-and-types.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const requestBody = result.paths['/users']!.post.requestBody!
             expect(requestBody.content!['application/xml'].schema).toEqual({
@@ -264,7 +272,7 @@ describe('Generator - Component Management', () => {
     describe('Component Count Validation', () => {
         test('should have correct total component count', () => {
             const files = [`${fixtures}/simple/multiple-endpoints.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const componentCount = Object.keys(result.components.schemas).length
             expect(componentCount).toBe(2) // User and CreateUserRequest (both have @component)
@@ -272,7 +280,7 @@ describe('Generator - Component Management', () => {
 
         test('should not have duplicate component keys', () => {
             const files = [`${fixtures}/edge-cases/same-type-multiple-uses.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             const componentKeys = Object.keys(result.components.schemas)
             const uniqueKeys = new Set(componentKeys)
@@ -281,7 +289,7 @@ describe('Generator - Component Management', () => {
 
         test('should only count types with @component tag', () => {
             const files = [`${fixtures}/edge-cases/mixed-component-and-inline.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Only User has @component, BasicResponse doesn't
             expect(Object.keys(result.components.schemas)).toHaveLength(1)
@@ -297,7 +305,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // User is used in posts, should reference the same component
             const post = result.components.schemas.Post as any
@@ -313,7 +321,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // All references to User should point to the same component
             const userRefs: string[] = []
@@ -344,7 +352,7 @@ describe('Generator - Component Management', () => {
                 `${fixtures}/complex/circular-refs/user.ts`,
                 `${fixtures}/complex/circular-refs/post.ts`,
             ]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Should have both components
             expect(result.components.schemas).toHaveProperty('User')
@@ -370,14 +378,14 @@ describe('Generator - Component Management', () => {
     describe('Edge Cases', () => {
         test('should handle empty components when no @component tags used', () => {
             const files = [`${fixtures}/edge-cases/types-without-component-tag.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(result.components.schemas).toEqual({})
         })
 
         test('should handle files with no autodoc but with types', () => {
             const files = [`${fixtures}/edge-cases/no-autodoc.ts`]
-            const result = generateOpenApiDoc(files, OpenApiVersion.v30)
+            const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Should not create components if types aren't referenced
             expect(Object.keys(result.components.schemas)).toHaveLength(0)

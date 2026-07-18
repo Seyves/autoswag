@@ -2,7 +2,7 @@ import type ts from 'typescript'
 import * as utils from '@/typescript-parser/utils'
 import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
-export type Tags = {
+export type Meta = {
     description?: string
     example?: any
     component?: string
@@ -23,7 +23,7 @@ export function parseSymbolJSDoc(
     checker: ts.TypeChecker,
     symbol: ts.Symbol,
     parent?: ts.Symbol,
-): Tags {
+): Meta {
     const docs = symbol.getDocumentationComment(checker)
     const docText = docs.map((d) => d.text).join(' ')
 
@@ -80,8 +80,8 @@ function parsePropertyMetadata(documentation: string): {
     return { description, metadata }
 }
 
-function parseRawTags(symbol: ts.Symbol, rawTags: Record<string, string>): Tags {
-    const tags: Tags = {}
+function parseRawTags(symbol: ts.Symbol, rawTags: Record<string, string>): Meta {
+    const tags: Meta = {}
 
     for (const [key, value] of Object.entries(rawTags)) {
         switch (key) {

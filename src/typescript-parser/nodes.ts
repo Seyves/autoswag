@@ -1,4 +1,4 @@
-import type { Tags } from './tags'
+import type { Meta } from './tags'
 
 export enum Kind {
     Undefined,
@@ -17,7 +17,7 @@ export enum Kind {
 }
 
 interface Base {
-    info?: Tags
+    info?: Meta
 }
 
 export interface Primitive extends Base {

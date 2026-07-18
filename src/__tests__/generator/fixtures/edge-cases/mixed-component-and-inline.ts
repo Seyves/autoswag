@@ -14,7 +14,7 @@ interface BasicResponse {
 
 /**
  * @autodoc POST /users
- * @request required User data
+ * @body required User data
  * @accept {User} application/json
  * @response {User} 201 User created
  * @response {BasicResponse} 400 Error response (will be inlined)

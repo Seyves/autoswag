@@ -1,4 +1,4 @@
 /**
  * @autodoc PUT /something
- * @request required My request
+ * @body required My request
  */

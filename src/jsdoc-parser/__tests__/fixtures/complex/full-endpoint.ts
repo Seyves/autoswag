@@ -9,7 +9,7 @@
  * @pathParam {string} id User ID
  * @queryParam {boolean} [notify] Send notification
  * @headerParam {string} X-Request-Id Request tracking ID
- * @request required Post data
+ * @body required Post data
  * @accept {PostData} application/json
  * @response {Post} 201.application/json Post created successfully
  * @response {Error} 400.application/json Invalid input

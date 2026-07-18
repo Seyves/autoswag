@@ -8,7 +8,7 @@ import { Post, CreatePostRequest } from './types'
 
 /**
  * @autodoc POST /posts
- * @request required Post data
+ * @body required Post data
  * @accept {CreatePostRequest} application/json
  * @response {Post} 201 Post created
  */

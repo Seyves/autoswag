@@ -7,7 +7,7 @@ import { User, CreateUserRequest } from './types'
 
 /**
  * @autodoc POST /users
- * @request required User data
+ * @body required User data
  * @accept {CreateUserRequest} application/json
  * @response {User} 201 User created
  */
