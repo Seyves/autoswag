@@ -16,6 +16,25 @@ TypeScript-first tool that generates OpenAPI documentation from JSDoc comments a
 - **Component management** - Extract reusable schemas automatically
 - **Cross-file resolution** - Import types from anywhere in your project
 
+## Usage example
+
+```ts
+import type { User, CreateUserRequest, ErrorResponse } from '@/types/user'
+
+/**
+ * @autoswag POST /users
+ * @summary Create a new user
+ * @tag Users
+ * @accept {CreateUserRequest}
+ * @response {User} 201 User created successfully
+ * @response {ErrorResponse} 400 Invalid input
+ * @response 401 Unauthorized
+ */
+export async function createUser(req, res) {
+    // Your implementation here
+}
+```
+
 ## Installation
 
 ```bash
@@ -24,7 +43,7 @@ npm install -D autoswag
 
 ## Documentation
 
-Full documentation available at [autoswag.vercel.app](https://swagger-autoswag.vercel.app/)
+Full documentation available at [autoswag.vercel.app](https://autoswag.vercel.app/)
 
 ## Roadmap
 

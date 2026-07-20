@@ -29,3 +29,22 @@ features:
     title: JSDoc Powered
     details: Document endpoints using natural JSDoc comments. Simple syntax, powerful features, stays close to your implementation.
 ---
+
+## Usage example
+
+```ts
+import type { User, CreateUserRequest, ErrorResponse } from '@/types/user'
+
+/**
+ * @autoswag POST /users
+ * @summary Create a new user
+ * @tag Users
+ * @accept {CreateUserRequest}
+ * @response {User} 201 User created successfully
+ * @response {ErrorResponse} 400 Invalid input
+ * @response 401 Unauthorized
+ */
+export async function createUser(req, res) {
+    // Your implementation here
+}
+```
