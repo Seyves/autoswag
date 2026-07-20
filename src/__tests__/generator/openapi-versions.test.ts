@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest'
-import { generate, OpenApiVersion } from '../../generator'
+import { generate, OpenApiVersion } from '../../index'
 
 describe('Generator - OpenAPI Version Differences', () => {
     const fixtures = 'src/__tests__/generator/fixtures'

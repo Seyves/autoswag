@@ -15,14 +15,7 @@
     "type": "git",
     "url": "https://github.com/Seyves/swagger-autodoc.git"
   },
-  "main": "./dist/generator.js",
-  "exports": {
-    ".": {
-      "types": "./dist/generator.d.ts",
-      "default": "./dist/generator.js"
-    },
-    "./package.json": "./package.json"
-  },
+  "main": "./dist/index.js",
   "sideEffects": false,
   "scripts": {
     "test": "vitest",
