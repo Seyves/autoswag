@@ -1,6 +1,6 @@
 {
   "name": "swagger-autodoc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Generate swagger documentation with automatically parsed components schemas from you .ts files!",
   "scripts": {
     "test": "vitest",
