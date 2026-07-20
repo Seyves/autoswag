@@ -1,3 +1,3 @@
 /**
- * @autodoc MET /something
+ * @autoswag MET /something
  */

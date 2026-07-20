@@ -2,7 +2,7 @@
 
 ## Overview
 
-Type parameters in curly braces `{type}` are used throughout Swagger Autodoc to reference schemas. They appear in:
+Type parameters in curly braces `{type}` are used throughout Autoswag to reference schemas. They appear in:
 
 - [`@accept`](./request-body-object#accept) - Request body schema
 - [`@response`](./response-object) - Response body schema
@@ -61,7 +61,7 @@ Generates `{ "type": "null" }` in OpenAPI 3.1 or `{ "nullable": true }` in OpenA
 
 ## 2. TypeScript Type References
 
-Reference any TypeScript type defined in your codebase. This is the primary feature of Swagger Autodoc.
+Reference any TypeScript type defined in your codebase. This is the primary feature of Autoswag.
 
 ### Example
 
@@ -101,7 +101,7 @@ interface User {
 ```
 
 ::: info Support
-Swagger Autodoc supports almost every TypeScript type, even @typedef. More on how types are resolved [**here**](./supported-types)
+Autoswag supports almost every TypeScript type, even @typedef. More on how types are resolved [**here**](./supported-types)
 :::
 
 ### Imported Type References
@@ -131,7 +131,7 @@ import type { User } from '../types/user'
 :::
 
 ::: tip Cross-File Resolution
-Swagger Autodoc uses the TypeScript compiler API to resolve all imports automatically. It respects your `tsconfig.json` path aliases.
+Autoswag uses the TypeScript compiler API to resolve all imports automatically. It respects your `tsconfig.json` path aliases.
 :::
 
 ## 3. TypeScript Type Expressions
@@ -139,7 +139,7 @@ Swagger Autodoc uses the TypeScript compiler API to resolve all imports automati
 Use TypeScript syntax directly in the type parameter for inline types.
 
 ::: warning
-To implement such functionality, Swagger Autodoc is forced to create temporary source files.
+To implement such functionality, Autoswag is forced to create temporary source files.
 We do not recommend using type expressions for large projects and files.
 :::
 
@@ -169,7 +169,7 @@ Reference pre-defined schemas in `baseDoc.components.schemas` using the `ref:` p
 ### Defining Components in baseDoc
 
 ```ts
-import { generate, OpenApiVersion } from 'swagger-autodoc'
+import { generate, OpenApiVersion } from 'autoswag'
 
 const spec = generate({
     source: ['src/api/**/*.ts'],
@@ -331,7 +331,7 @@ Use built-in format strings directly for common patterns.
 
 ## Type Resolution Order
 
-When Swagger Autodoc encounters a type parameter, it resolves it in this order:
+When Autoswag encounters a type parameter, it resolves it in this order:
 
 1. **Check if primitive** - `string`, `number`, `boolean`, `null`
 2. **Check if format constant** - `uuid`, `email`, `date-time`, etc.

@@ -1,4 +1,4 @@
 /**
- * @autodoc GET /basic
+ * @autoswag GET /basic
  * @security BasicAuth 
  */

@@ -1,4 +1,4 @@
 /**
- * @autodoc POST /something
+ * @autoswag POST /something
  * @response {Type} My response
  */

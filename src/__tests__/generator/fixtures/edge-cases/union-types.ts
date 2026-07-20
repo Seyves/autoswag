@@ -20,6 +20,6 @@ interface ErrorResponse {
 type ApiResponse = SuccessResponse | ErrorResponse
 
 /**
- * @autodoc POST /action
+ * @autoswag POST /action
  * @response {ApiResponse} 200 Action result
  */

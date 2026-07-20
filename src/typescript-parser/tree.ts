@@ -3,7 +3,7 @@ import * as utils from '@/typescript-parser/utils'
 import * as nodes from '@/typescript-parser/nodes'
 import * as tags from '@/typescript-parser/tags'
 import type { Meta } from './tags'
-import { AutodocError, getLocationFromSymbol } from '@/common/errors'
+import { AutoswagError, getLocationFromSymbol } from '@/common/errors'
 
 export interface Context {
     checker: ts.TypeChecker
@@ -59,7 +59,7 @@ export function typeToTree(
         // Use type object reference - the only reliable way to detect true recursion
         // Symbol IDs are unreliable: JSDoc imports share id=0, generics share anonymous type IDs
         if (symbolStack.includes(type)) {
-            throw new AutodocError(
+            throw new AutoswagError(
                 `Recursive declaration encountered on symbol '${symbol.name}'. To fix this issue, mark recursive type with @component tag`,
                 getLocationFromSymbol(symbol),
             )

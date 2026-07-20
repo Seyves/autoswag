@@ -69,7 +69,7 @@ describe('Generator - Basic Orchestration', () => {
     })
 
     describe('Multiple Endpoints in Single File', () => {
-        test('should process multiple autodoc blocks', () => {
+        test('should process multiple autoswag blocks', () => {
             const files = [`${fixtures}/simple/multiple-endpoints.ts`]
             const result = generate({ source: files, version: OpenApiVersion.v30 })
 
@@ -211,8 +211,8 @@ describe('Generator - Basic Orchestration', () => {
     })
 
     describe('Empty and Edge Cases', () => {
-        test('should handle files with no autodoc tags', () => {
-            const files = [`${fixtures}/edge-cases/no-autodoc.ts`]
+        test('should handle files with no autoswag tags', () => {
+            const files = [`${fixtures}/edge-cases/no-autoswag.ts`]
             const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             expect(Object.keys(result.paths)).toHaveLength(0)

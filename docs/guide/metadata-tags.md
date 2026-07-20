@@ -50,7 +50,7 @@ interface Example {
 
 ```ts
 /**
- * Swagger Autodoc also
+ * Autoswag also
  * supports multiline descriptions.
  *
  * Yep.
@@ -74,7 +74,7 @@ interface Example {
             "type": "number"
         }
     },
-    "description": "Swagger Autodoc also supports multiline descriptions. Yep.",
+    "description": "Autoswag also supports multiline descriptions. Yep.",
     "required": ["id", "ratio"]
 }
 ```

@@ -20,14 +20,14 @@ Tags that define OpenAPI [Response Object](https://spec.openapis.org/oas/v3.1.0.
 
 ```ts
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {User} 200 User found
  * @response 404 User not found
  */
 
 /**
- * @autodoc DELETE /users/{id}
+ * @autoswag DELETE /users/{id}
  * @pathParam {string} id User ID
  * @response 204 User deleted
  * @response 404 User not found

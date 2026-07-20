@@ -1,8 +1,8 @@
 # Introduction
 
-## What is Swagger Autodoc?
+## What is Autoswag?
 
-Swagger Autodoc is a TypeScript-first tool that generates [OpenAPI](https://spec.openapis.org) documentation from JSDoc comments and TypeScript type definitions. It bridges the gap between your source code and API documentation, keeping them in perfect sync.
+Autoswag is a TypeScript-first tool that generates [OpenAPI](https://spec.openapis.org) documentation from JSDoc comments and TypeScript type definitions. It bridges the gap between your source code and API documentation, keeping them in perfect sync.
 
 ## The Problem
 
@@ -15,7 +15,7 @@ Maintaining API documentation is painful:
 
 ## The Solution
 
-Swagger Autodoc lets you define API endpoints using JSDoc comments directly in your code, while automatically generating OpenAPI schemas from your TypeScript types. You write documentation once, right next to the code it describes.
+Autoswag lets you define API endpoints using JSDoc comments directly in your code, while automatically generating OpenAPI schemas from your TypeScript types. You write documentation once, right next to the code it describes.
 
 **Benefits:**
 
@@ -39,7 +39,7 @@ Swagger Autodoc lets you define API endpoints using JSDoc comments directly in y
 
 ### Before: Manual OpenAPI
 
-Without Swagger Autodoc, you'd maintain types AND schemas separately:
+Without Autoswag, you'd maintain types AND schemas separately:
 
 ::: code-group
 
@@ -79,9 +79,9 @@ interface User {
 
 :::
 
-### After: Swagger Autodoc
+### After: Autoswag
 
-With Swagger Autodoc, document endpoints with JSDoc and reference your types:
+With Autoswag, document endpoints with JSDoc and reference your types:
 
 ::: code-group
 
@@ -96,7 +96,7 @@ interface User {
 
 ```ts [src/api/users.ts]
 /**
- * @autodoc POST /user
+ * @autoswag POST /user
  * @summary Create a new user
  * @accept {User} application/json
  * @response {User} 201 User created successfully
@@ -112,7 +112,7 @@ export async function createUser(req, res) {
 Run the generator:
 
 ```ts
-import { generate, OpenApiVersion } from 'swagger-autodoc'
+import { generate, OpenApiVersion } from 'autoswag'
 import { writeFileSync } from 'fs'
 
 const spec = generate({
@@ -209,7 +209,7 @@ The generated OpenAPI document:
 
 ## How It Works
 
-1. **Write JSDoc comments** - Mark endpoints with `@autodoc` and other tags
+1. **Write JSDoc comments** - Mark endpoints with `@autoswag` and other tags
 2. **Reference TypeScript types** - Use `{type}` syntax in your JSDoc
 3. **Run the generator** - Scans your code, extracts endpoints, converts types
 4. **Get OpenAPI output** - Valid OpenAPI 3.0/3.1 JSON ready to use

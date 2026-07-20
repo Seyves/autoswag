@@ -47,7 +47,7 @@ Everywhere `User` is used, it becomes a `$ref`:
 
 ```ts
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id
  * @response {User} 200 Success
  */
@@ -189,7 +189,7 @@ interface ListNode<T> {
 You can also define components directly in `baseDoc`:
 
 ```ts
-import { generate } from 'swagger-autodoc'
+import { generate } from 'autoswag'
 
 const spec = generate({
     source: ['src/api/**/*.ts'],
@@ -215,7 +215,7 @@ Reference with `{ref:Error}`:
 
 ```ts
 /**
- * @autodoc GET /data
+ * @autoswag GET /data
  * @response {Data} 200 Success
  * @response {ref:Error} 500 Server error
  */

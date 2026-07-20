@@ -1,12 +1,12 @@
 import type ts from 'typescript'
 import type * as commentParser from 'comment-parser'
 
-export class AutodocError extends Error {
+export class AutoswagError extends Error {
     name: string
     location: string
     constructor(message: string, location: string) {
         super(`${message} at ${location}.`)
-        this.name = 'AutodocError'
+        this.name = 'AutoswagError'
         this.location = location
     }
 }

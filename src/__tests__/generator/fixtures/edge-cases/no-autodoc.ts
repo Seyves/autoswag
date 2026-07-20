@@ -1,4 +1,4 @@
-// This file has no @autodoc tags, should return empty paths
+// This file has no @autoswag tags, should return empty paths
 
 interface User {
     id: string

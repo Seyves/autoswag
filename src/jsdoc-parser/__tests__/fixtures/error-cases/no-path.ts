@@ -1,3 +1,3 @@
 /**
- * @autodoc GET
+ * @autoswag GET
  */

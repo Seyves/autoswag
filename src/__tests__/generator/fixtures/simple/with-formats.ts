@@ -1,5 +1,5 @@
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {uuid} application/json
  * @response {date-time} 200 Created timestamp

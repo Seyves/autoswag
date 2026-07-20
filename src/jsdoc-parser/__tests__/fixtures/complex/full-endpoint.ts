@@ -1,5 +1,5 @@
 /**
- * @autodoc POST /api/v1/users/{id}/posts
+ * @autoswag POST /api/v1/users/{id}/posts
  * @operationId createUserPost
  * @summary Create a new post for user
  * @tag Posts

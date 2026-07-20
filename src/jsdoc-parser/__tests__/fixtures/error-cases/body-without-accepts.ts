@@ -1,4 +1,4 @@
 /**
- * @autodoc PUT /something
+ * @autoswag PUT /something
  * @body required My request
  */

@@ -6,21 +6,21 @@ Choose your preferred package manager:
 
 ::: code-group
 ```bash [npm]
-npm install -D swagger-autodoc
+npm install -D autoswag
 ```
 
 ```bash [pnpm]
-pnpm add -D swagger-autodoc
+pnpm add -D autoswag
 ```
 
 ```bash [yarn]
-yarn add -D swagger-autodoc
+yarn add -D autoswag
 ```
 :::
 
 ## TypeScript Configuration
 
-Swagger Autodoc reads your `tsconfig.json` automatically. No special configuration is required:
+Autoswag reads your `tsconfig.json` automatically. No special configuration is required:
 
 ```json
 {
@@ -39,11 +39,11 @@ Swagger Autodoc reads your `tsconfig.json` automatically. No special configurati
 ```
 
 ::: warning Important
-If you use path aliases (like `@/*`), Swagger Autodoc will respect them from your tsconfig.json `paths` configuration.
+If you use path aliases (like `@/*`), Autoswag will respect them from your tsconfig.json `paths` configuration.
 :::
 
 ::: tip 
-TypeScript configuration used by Swagger Autodoc can be overridden in the config. See [compilerOptions](./configuration#compilerOptions)
+TypeScript configuration used by Autoswag can be overridden in the config. See [compilerOptions](./configuration#compilerOptions)
 :::
 
 ## Next Steps

@@ -7,7 +7,7 @@ interface User {
 }
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {User} application/json
  * @accept {ref:LegacyUserFormat} application/xml

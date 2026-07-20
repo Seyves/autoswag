@@ -13,7 +13,7 @@ interface BasicResponse {
 }
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {User} application/json
  * @response {User} 201 User created

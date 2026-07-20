@@ -139,7 +139,7 @@ generate({
 OpenAPI specification version for output.
 
 ```ts
-import { OpenApiVersion } from 'swagger-autodoc'
+import { OpenApiVersion } from 'autoswag'
 
 generate({
     source: ['src/api/**/*.ts'],

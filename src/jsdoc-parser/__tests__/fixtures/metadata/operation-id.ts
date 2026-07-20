@@ -1,4 +1,4 @@
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @operationId getUserList
  */

@@ -7,6 +7,6 @@ interface User {
 }
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @response {User} 201 User created
  */

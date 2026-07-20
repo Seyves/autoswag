@@ -1,3 +1,3 @@
 /**
- * @autodoc HEAD /resource
+ * @autoswag HEAD /resource
  */

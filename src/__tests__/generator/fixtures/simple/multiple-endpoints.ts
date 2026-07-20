@@ -14,19 +14,19 @@ interface CreateUserRequest {
 }
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @response {User} 200 List of users
  */
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {CreateUserRequest} application/json
  * @response {User} 201 User created
  */
 
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {User} 200 User details
  */

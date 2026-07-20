@@ -1,6 +1,6 @@
 # Supported TypeScript Types
 
-Swagger Autodoc uses the TypeScript compiler API to understand your types and convert them to OpenAPI schemas.
+Autoswag uses the TypeScript compiler API to understand your types and convert them to OpenAPI schemas.
 
 ## Primitives
 
@@ -309,11 +309,11 @@ type Person = Named & Aged
 }
 ```
 ::: warning
-Swagger Autodoc handles only objects intersections.
+Autoswag handles only objects intersections.
 :::
 
 ::: warning
-If an object intersection contains a property defined in both objects, Swagger Autodoc uses the one from the object listed first.
+If an object intersection contains a property defined in both objects, Autoswag uses the one from the object listed first.
 Example:
 
 ```ts

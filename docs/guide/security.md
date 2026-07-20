@@ -11,7 +11,7 @@ The `@security` tag specifies which security schemes are required for an endpoin
 First, define schemes in `baseDoc`:
 
 ```ts
-import { generate, OpenApiVersion } from 'swagger-autodoc'
+import { generate, OpenApiVersion } from 'autoswag'
 
 const spec = generate({
     source: ['src/api/**/*.ts'],
@@ -56,7 +56,7 @@ const spec = generate({
 
 ```ts
 /**
- * @autodoc GET /profile
+ * @autoswag GET /profile
  * @summary Get current user profile
  * @security bearerAuth
  * @response {User} 200 Profile data
@@ -71,7 +71,7 @@ export async function getProfile(req, res) {
 
 ```ts
 /**
- * @autodoc GET /data
+ * @autoswag GET /data
  * @summary Get protected data
  * @security apiKey
  * @response {Data} 200 Data
@@ -86,7 +86,7 @@ export async function getData(req, res) {
 
 ```ts
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @summary List users
  * @security oauth2 read:users
  * @response {User[]} 200 User list
@@ -98,7 +98,7 @@ export async function listUsers(req, res) {
 }
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @summary Create user
  * @security oauth2 write:users admin
  * @accept {CreateUserRequest}
@@ -116,7 +116,7 @@ Apply multiple `@security` tags to allow alternative authentication methods:
 
 ```ts
 /**
- * @autodoc GET /data
+ * @autoswag GET /data
  * @summary Get data
  * @security bearerAuth
  * @security apiKey
@@ -132,7 +132,7 @@ Omit `@security` for public endpoints:
 
 ```ts
 /**
- * @autodoc GET /public/info
+ * @autoswag GET /public/info
  * @summary Get public information
  * @response {Info} 200 Public info
  */

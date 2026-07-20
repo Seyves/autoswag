@@ -1,5 +1,5 @@
 /**
- * @autodoc DELETE /users/{id}
+ * @autoswag DELETE /users/{id}
  * @operationId deleteUser
  * @summary Delete user account
  * @tag Users

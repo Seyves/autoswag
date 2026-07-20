@@ -1,9 +1,9 @@
 {
-  "name": "swagger-autodoc",
+  "name": "autoswag",
   "version": "0.1.0",
   "description": "Generate swagger documentation with automatically parsed schemas from your .ts files!",
-  "homepage": "https://swagger-autodoc.vercel.app/",
-  "bugs": "https://github.com/Seyves/swagger-autodoc/issues",
+  "homepage": "https://autoswag.vercel.app/",
+  "bugs": "https://github.com/Seyves/autoswag/issues",
   "license": "ISC",
   "author": "Seyves",
   "files": [
@@ -13,7 +13,7 @@
   "keywords": ["openapi", "swagger", "typescript", "jsdoc", "api-documentation", "openapi-generator"], 
   "repository": {
     "type": "git",
-    "url": "https://github.com/Seyves/swagger-autodoc.git"
+    "url": "https://github.com/Seyves/autoswag.git"
   },
   "main": "./dist/index.js",
   "sideEffects": false,

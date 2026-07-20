@@ -8,7 +8,7 @@ function getUser(id: string) {
 }
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  */
 
 /**

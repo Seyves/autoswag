@@ -1,4 +1,4 @@
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @summary Create a new user in the system
  */

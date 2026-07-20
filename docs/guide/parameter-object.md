@@ -28,13 +28,13 @@ Defines **Parameter Object** with `path` name
 
 ```ts
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {User} 200 Success
  */
 
 /**
- * @autodoc GET /users/{userId}
+ * @autoswag GET /users/{userId}
  * @pathParam {uuid} userId User UUID
  */
 ```
@@ -58,7 +58,7 @@ Defines **Parameter Object** with `query` name
 
 ```ts
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @queryParam {number} [limit] Max results
  * @queryParam {number} [offset] Pagination offset
  * @queryParam {string} [sort] Sort field
@@ -81,7 +81,7 @@ Defines **Parameter Object** with `header` name
 
 ```ts
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @headerParam {uuid} X-Idempotency-Key Unique request ID
  * @headerParam {string} [X-Request-ID] Request trace ID
  * @accept {User} application/json
@@ -107,7 +107,7 @@ Defines **Parameter Object** with `cookie` name
 
 ```ts
 /**
- * @autodoc GET /profile
+ * @autoswag GET /profile
  * @cookieParam {string} sessionId Session identifier
  * @cookieParam {string} [preferences] User preferences JSON
  * @response {Profile} 200 User profile

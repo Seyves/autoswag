@@ -1,5 +1,5 @@
 /**
- * @autodoc POST /echo
+ * @autoswag POST /echo
  * @body required Echo data
  * @accept {string} text/plain
  * @response {string} 200 Echo response

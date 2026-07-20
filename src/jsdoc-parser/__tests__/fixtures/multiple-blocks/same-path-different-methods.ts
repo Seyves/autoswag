@@ -1,15 +1,15 @@
 /**
- * @autodoc GET /resource
+ * @autoswag GET /resource
  */
 
 /**
- * @autodoc POST /resource
+ * @autoswag POST /resource
  */
 
 /**
- * @autodoc PUT /resource
+ * @autoswag PUT /resource
  */
 
 /**
- * @autodoc DELETE /resource
+ * @autoswag DELETE /resource
  */

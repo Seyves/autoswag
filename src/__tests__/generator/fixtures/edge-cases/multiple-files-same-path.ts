@@ -1,5 +1,5 @@
 // File 1: First definition of GET /resource
 /**
- * @autodoc GET /resource
+ * @autoswag GET /resource
  * @response {string} 200 First version
  */

@@ -2,14 +2,14 @@
 
 Tags that define OpenAPI [Operation Object](https://spec.openapis.org/oas/v3.1.0.html#operation-object)
 
-## @autodoc
+## @autoswag
 
 **Required** - Defines the HTTP method and path for an API endpoint.
 
 ### Syntax
 
 ```
-@autodoc <method> <path>
+@autoswag <method> <path>
 ```
 
 ### Parameters
@@ -21,12 +21,12 @@ Tags that define OpenAPI [Operation Object](https://spec.openapis.org/oas/v3.1.0
 
 ```ts
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  */
 export function listUsers() {}
 
 /**
- * @autodoc DELETE /api/v1/users/{userId}/posts/{postId}
+ * @autoswag DELETE /api/v1/users/{userId}/posts/{postId}
  * @pathParam {string} userId User ID
  * @pathParam {string} postId Post ID
  */
@@ -39,9 +39,9 @@ Include path parameters in curly braces:
 
 ```ts
 /**
- * @autodoc GET /users/{id}
- * @autodoc GET /posts/{postId}/comments/{commentId}
- * @autodoc GET /files/{filePath*}  // Greedy parameter (matches /)
+ * @autoswag GET /users/{id}
+ * @autoswag GET /posts/{postId}/comments/{commentId}
+ * @autoswag GET /files/{filePath*}  // Greedy parameter (matches /)
  */
 ```
 
@@ -76,7 +76,7 @@ Defines `tags` field
 
 ```ts
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @tag Users
  * @response {User[]} 200 Users list
  */
@@ -86,7 +86,7 @@ Defines `tags` field
 
 ```ts
 /**
- * @autodoc POST /users/{id}/avatar
+ * @autoswag POST /users/{id}/avatar
  * @tag Users
  * @tag Media
  * @pathParam {string} id User ID
@@ -140,7 +140,7 @@ Defines `summary` field
 
 ```ts
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @summary List all users
  */
 ```
@@ -156,7 +156,7 @@ Combine with JSDoc description:
  * This endpoint returns comprehensive user data. Use GET /users/{id}/profile
  * for a lighter response with just profile information.
  *
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @summary Get user details
  * @pathParam {string} id User ID
  * @response {UserDetails} 200 Success
@@ -182,7 +182,7 @@ Defines `externalDocs` field
 
 ```ts
 /**
- * @autodoc POST /payments
+ * @autoswag POST /payments
  * @summary Process payment
  * @accept {PaymentRequest}
  * @response {PaymentResult} 200 Payment processed
@@ -190,7 +190,7 @@ Defines `externalDocs` field
  */
 
 /**
- * @autodoc POST /webhooks
+ * @autoswag POST /webhooks
  * @summary Receive webhook
  * @accept {WebhookPayload}
  * @response 200 Received
@@ -212,7 +212,7 @@ Defines `operationId` field
 
 ```ts
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @operationId getUserById
  */
 export function getUser() {}
@@ -232,7 +232,7 @@ Defines `deprecated` field
 
 ```ts
 /**
- * @autodoc GET /api/v1/users
+ * @autoswag GET /api/v1/users
  * @summary List users
  * @deprecated
  */
@@ -259,7 +259,7 @@ More about using security **[here](./security)**
 
 ```ts
 /**
- * @autodoc GET /profile
+ * @autoswag GET /profile
  * @summary Get current user profile
  * @security bearerAuth
  * @response {User} 200 Profile data
@@ -283,7 +283,7 @@ Defines `servers` field
 
 ```ts
 /**
- * @autodoc POST /upload
+ * @autoswag POST /upload
  * @server https://cdn.example.com CDN upload endpoint
  * @accept {File} multipart/form-data
  * @response 201 Uploaded
@@ -294,7 +294,7 @@ Defines `servers` field
 
 ```ts
 /**
- * @autodoc GET /data
+ * @autoswag GET /data
  * @server https://api-primary.example.com Primary datacenter
  * @server https://api-backup.example.com Backup datacenter
  * @response {Data} 200 Success

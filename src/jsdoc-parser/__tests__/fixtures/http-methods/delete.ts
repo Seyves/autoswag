@@ -1,3 +1,3 @@
 /**
- * @autodoc DELETE /resource/{id}
+ * @autoswag DELETE /resource/{id}
  */

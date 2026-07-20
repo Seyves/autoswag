@@ -1,5 +1,5 @@
 /**
- * @autodoc PUT /something
+ * @autoswag PUT /something
  * @body 
  * @accept  text/plain
  */

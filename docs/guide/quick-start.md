@@ -42,7 +42,7 @@ export interface ErrorResponse {
 :::
 
 ::: tip Defining standalone types
-You are not forced to define types yourself, Swagger Autodoc can infer them from almost any TypeScript type. You can use `z.infer` from zod, for [example](./zod-example).
+You are not forced to define types yourself, Autoswag can infer them from almost any TypeScript type. You can use `z.infer` from zod, for [example](./zod-example).
 :::
 
 ## Step 2: Document Your Endpoints
@@ -53,7 +53,7 @@ Now document your API endpoints using JSDoc comments:
 import type { User, CreateUserRequest, ErrorResponse } from '../types/user'
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @summary Create a new user
  * @tag Users
  * @accept {CreateUserRequest}
@@ -66,7 +66,7 @@ export async function createUser(req, res) {
 }
 
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @summary Get user by ID
  * @tag Users
  * @pathParam {string} id User ID
@@ -78,7 +78,7 @@ export async function getUser(req, res) {
 }
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @summary List all users
  * @tag Users
  * @queryParam {number} [limit] Maximum number of users
@@ -92,7 +92,7 @@ export async function listUsers(req, res) {
 
 ::: info JSDoc Tags Explained
 
-- `@autodoc <METHOD> <path>` - Defines the endpoint
+- `@autoswag <METHOD> <path>` - Defines the endpoint
 - `@summary` - Brief description (shows in API docs)
 - `@tag` - Groups related endpoints together
 - `@accept` - Request body type and content-type
@@ -107,7 +107,7 @@ export async function listUsers(req, res) {
 Create a script to generate the OpenAPI document:
 
 ```ts [scripts/generate-docs.ts]
-import { generate, OpenApiVersion } from 'swagger-autodoc'
+import { generate, OpenApiVersion } from 'autoswag'
 import { writeFileSync } from 'fs'
 
 // Base OpenAPI document (metadata)

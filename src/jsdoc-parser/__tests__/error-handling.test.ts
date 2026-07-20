@@ -6,13 +6,13 @@ describe('Error Handling', () => {
 
     test('should throw on invalid method', () => {
         expect(() => parsePaths(`${fixtures}/invalid-method.ts`)).toThrow(
-            `@autodoc tag contains invalid request method: 'MET'`,
+            `@autoswag tag contains invalid request method: 'MET'`,
         )
     })
 
     test('should throw on no path', () => {
         expect(() => parsePaths(`${fixtures}/no-path.ts`)).toThrow(
-            '@autodoc tag has no path specified',
+            '@autoswag tag has no path specified',
         )
     })
 

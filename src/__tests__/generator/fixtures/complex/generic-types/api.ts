@@ -12,12 +12,12 @@ type UserResponse = ApiResponse<User>
 type UserListResponse = PagedResponse<User>
 
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {UserResponse} 200 User data
  */
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @response {UserListResponse} 200 User list
  */

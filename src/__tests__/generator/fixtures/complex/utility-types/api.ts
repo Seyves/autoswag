@@ -16,20 +16,20 @@ type CreateUserRequest = Pick<User, 'name' | 'email' | 'password'>
 type UpdateUserRequest = Partial<Pick<User, 'name' | 'email'>>
 
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {PublicUser} 200 User data
  */
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {CreateUserRequest} application/json
  * @response {PublicUser} 201 User created
  */
 
 /**
- * @autodoc PATCH /users/{id}
+ * @autoswag PATCH /users/{id}
  * @pathParam {string} id User ID
  * @body required User updates
  * @accept {UpdateUserRequest} application/json

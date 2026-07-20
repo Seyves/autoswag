@@ -4,7 +4,7 @@ import { parsePaths } from '../parser'
 describe('Multiple Blocks', () => {
     const fixtures = 'src/jsdoc-parser/__tests__/fixtures/multiple-blocks'
 
-    test('should parse multiple autodoc blocks in single file', () => {
+    test('should parse multiple autoswag blocks in single file', () => {
         const fileName = `${fixtures}/multiple-endpoints.ts`
         const result = parsePaths(fileName)
         expect(result).toStrictEqual({
@@ -18,7 +18,7 @@ describe('Multiple Blocks', () => {
         })
     })
 
-    test('should skip blocks without @autodoc tag', () => {
+    test('should skip blocks without @autoswag tag', () => {
         const fileName = `${fixtures}/mixed-with-regular-comments.ts`
         const result = parsePaths(fileName)
         expect(result).toStrictEqual({

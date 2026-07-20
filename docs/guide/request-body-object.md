@@ -26,13 +26,13 @@ Defines `description` and `required` fields.
 
 ```ts
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {User} application/json
  */
 
 /**
- * @autodoc PATCH /users/{id}
+ * @autoswag PATCH /users/{id}
  * @body optional Partial user updates
  * @accept {Partial<User>} application/json
  */
@@ -60,14 +60,14 @@ Defines element in `content` map field.
 
 ```ts
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @body required User data
  * @accept {CreateUserRequest}  
  * @response {User} 201 Created
  */
 
 /**
- * @autodoc POST /upload
+ * @autoswag POST /upload
  * @body required File upload
  * @accept {FileUpload} multipart/form-data
  * @accept {string} text/plain

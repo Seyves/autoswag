@@ -115,7 +115,7 @@ interface AuthToken {
 /**
  * Authenticate with email and password
  * 
- * @autodoc POST /auth/login
+ * @autoswag POST /auth/login
  * @operationId login
  * @summary User login
  * @tag Authentication
@@ -133,7 +133,7 @@ export async function login(req, res) {
 /**
  * End current session
  * 
- * @autodoc POST /auth/logout
+ * @autoswag POST /auth/logout
  * @operationId logout
  * @summary User logout
  * @tag Authentication
@@ -160,7 +160,7 @@ import type {
 /**
  * Create a new user account
  * 
- * @autodoc POST /users
+ * @autoswag POST /users
  * @operationId createUser
  * @summary Create user
  * @tag Users
@@ -181,7 +181,7 @@ export async function createUser(req, res) {
 /**
  * Retrieve user by ID
  * 
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @operationId getUserById
  * @summary Get user
  * @tag Users
@@ -201,7 +201,7 @@ export async function getUserById(req, res) {
 /**
  * List all users with pagination
  * 
- * @autodoc GET /users
+ * @autoswag GET /users
  * @operationId listUsers
  * @summary List users
  * @tag Users
@@ -223,7 +223,7 @@ export async function listUsers(req, res) {
 /**
  * Update user information
  * 
- * @autodoc PATCH /users/{id}
+ * @autoswag PATCH /users/{id}
  * @operationId updateUser
  * @summary Update user
  * @tag Users
@@ -247,7 +247,7 @@ export async function updateUser(req, res) {
 /**
  * Delete user account
  * 
- * @autodoc DELETE /users/{id}
+ * @autoswag DELETE /users/{id}
  * @operationId deleteUser
  * @summary Delete user
  * @tag Users
@@ -269,7 +269,7 @@ export async function deleteUser(req, res) {
 :::
 
 ```ts [generate-docs.ts]
-import { generate, OpenApiVersion } from 'swagger-autodoc'
+import { generate, OpenApiVersion } from 'autoswag'
 import { writeFileSync } from 'fs'
 
 const spec = generate({

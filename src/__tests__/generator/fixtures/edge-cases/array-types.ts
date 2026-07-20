@@ -12,6 +12,6 @@ interface User {
 type UserList = User[]
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @response {UserList} 200 List of users
  */

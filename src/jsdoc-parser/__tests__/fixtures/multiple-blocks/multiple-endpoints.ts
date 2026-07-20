@@ -1,11 +1,11 @@
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  */
 
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  */
 
 /**
- * @autodoc DELETE /users/{id}
+ * @autoswag DELETE /users/{id}
  */

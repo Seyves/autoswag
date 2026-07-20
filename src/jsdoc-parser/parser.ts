@@ -1,4 +1,4 @@
-import { AutodocError, getLocationFromLine, getTypePositionFromLine } from '@/common/errors'
+import { AutoswagError, getLocationFromLine, getTypePositionFromLine } from '@/common/errors'
 import * as commentParser from 'comment-parser'
 import fs from 'fs'
 import * as openApiPaths from '@/jsdoc-parser/openapi-paths'
@@ -7,7 +7,7 @@ import type { TypeReference } from '@/common/type-reference'
 export type Request = openApiPaths.Request<TypeReference>
 
 enum Tags {
-    Autodoc = 'autodoc',
+    Autoswag = 'autoswag',
     Security = 'security',
     OperationId = 'operationId',
     Deprecated = 'deprecated',
@@ -52,8 +52,8 @@ export function parsePaths(fileName: string) {
     const paths: Record<string, Record<string, openApiPaths.Request<TypeReference>>> = {}
 
     for (const block of parsed) {
-        // Skipping blocks with no @autodoc tag
-        if (block.tags.every((tag) => tag.tag !== Tags.Autodoc)) {
+        // Skipping blocks with no @autoswag tag
+        if (block.tags.every((tag) => tag.tag !== Tags.Autoswag)) {
             continue
         }
 
@@ -69,19 +69,19 @@ function parseJSDocBlock(
     fileName: string,
     block: commentParser.Block,
 ): [string, string, openApiPaths.Request<TypeReference>] {
-    const autodocTag = block.tags.find((tag) => tag.tag === Tags.Autodoc)!
+    const autoswagTag = block.tags.find((tag) => tag.tag === Tags.Autoswag)!
 
-    if (!httpMethods.includes(autodocTag.name)) {
-        throw new AutodocError(
-            `@autodoc tag contains invalid request method: '${autodocTag.name}'`,
-            getLocationFromLine(fileName, autodocTag.source),
+    if (!httpMethods.includes(autoswagTag.name)) {
+        throw new AutoswagError(
+            `@autoswag tag contains invalid request method: '${autoswagTag.name}'`,
+            getLocationFromLine(fileName, autoswagTag.source),
         )
     }
 
-    if (!autodocTag.description) {
-        throw new AutodocError(
-            '@autodoc tag has no path specified',
-            getLocationFromLine(fileName, autodocTag.source),
+    if (!autoswagTag.description) {
+        throw new AutoswagError(
+            '@autoswag tag has no path specified',
+            getLocationFromLine(fileName, autoswagTag.source),
         )
     }
 
@@ -188,7 +188,7 @@ function parseJSDocBlock(
 
             case Tags.Body:
                 if (block.tags.every((tag) => tag.tag !== Tags.Accept)) {
-                    throw new AutodocError(
+                    throw new AutoswagError(
                         `@body tag cannot be specified without @accept tags`,
                         getLocationFromLine(fileName, tag.source),
                     )
@@ -207,7 +207,7 @@ function parseJSDocBlock(
                         request.requestBody.required = true
                         break
                     default:
-                        throw new AutodocError(
+                        throw new AutoswagError(
                             `@body tag should contain 'optional' or 'required' right after declaration`,
                             getLocationFromLine(fileName, tag.source),
                         )
@@ -239,7 +239,7 @@ function parseJSDocBlock(
                 if (!request.responses) request.responses = {}
 
                 if (!tag.description) {
-                    throw new AutodocError(
+                    throw new AutoswagError(
                         '@response tag should contain description',
                         getLocationFromLine(fileName, tag.source),
                     )
@@ -250,14 +250,14 @@ function parseJSDocBlock(
 
                 const match = tag.name.match(responseNameFormatRegex)
                 if (!match) {
-                    throw new AutodocError(
+                    throw new AutoswagError(
                         `@response tag should contain expression <httpCode> or <httpCode>.<contentType> right after declaration`,
                         getLocationFromLine(fileName, tag.source),
                     )
                 }
                 const code = parseInt(match[1] as string)
                 if (isNaN(code)) {
-                    throw new AutodocError(
+                    throw new AutoswagError(
                         `@response tag contain invalid response code`,
                         getLocationFromLine(fileName, tag.source),
                     )
@@ -285,7 +285,7 @@ function parseJSDocBlock(
         }
     }
 
-    return [autodocTag.description, autodocTag.name.toLowerCase(), request]
+    return [autoswagTag.description, autoswagTag.name.toLowerCase(), request]
 }
 
 function getContentFromTagType(

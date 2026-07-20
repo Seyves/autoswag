@@ -1,3 +1,3 @@
 /**
- * @autodoc PATCH /resource/{id}
+ * @autoswag PATCH /resource/{id}
  */

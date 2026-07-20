@@ -1,3 +1,3 @@
 /**
- * @autodoc OPTIONS /resource
+ * @autoswag OPTIONS /resource
  */

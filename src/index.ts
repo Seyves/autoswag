@@ -8,12 +8,12 @@ import * as openApiV30 from '@/openapi-converter/openapi-3.0'
 import * as openApiV31 from '@/openapi-converter/openapi-3.1'
 import ts from 'typescript'
 import { isTypeReference, type TypeReference } from '@/common/type-reference'
-import * as tsNodes from '@/typescript-parser/nodes'
+import type * as tsNodes from '@/typescript-parser/nodes'
 import type { Request } from './jsdoc-parser/openapi-paths'
 import { globSync } from 'tinyglobby'
 import path from 'path'
-import { AutodocError } from './common/errors'
-export { AutodocError } from './common/errors'
+import { AutoswagError } from './common/errors'
+export { AutoswagError } from './common/errors'
 
 export enum OpenApiVersion {
     v30 = '3.0.0',
@@ -179,7 +179,7 @@ function resolveTypeReference(ctx: GeneratorContext, ref: TypeReference): any {
 
     if (!tree) {
         console.log(`${ref.$fileName}:${ref.$position.join(':')}`)
-        throw new AutodocError(
+        throw new AutoswagError(
             `Cannot find type: '${ref.$tsType}'`,
             `${ref.$fileName}:${ref.$position.join(':')}`,
         )

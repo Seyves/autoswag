@@ -1,4 +1,4 @@
 /**
- * @autodoc GET /protected
+ * @autoswag GET /protected
  * @security BearerAuth
  */

@@ -1,5 +1,5 @@
 /**
- * @autodoc GET /data
+ * @autoswag GET /data
  * @security BearerAuth
  * @security ApiKeyAuth
  */

@@ -8,7 +8,7 @@ export interface User {
 }
 
 /**
- * @autodoc GET /users/{id}
+ * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
  * @response {User} 200 Success
  */

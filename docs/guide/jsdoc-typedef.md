@@ -1,6 +1,6 @@
 # JSDoc @typedef
 
-Use Swagger Autodoc with JavaScript files using JSDoc `@typedef`.
+Use Autoswag with JavaScript files using JSDoc `@typedef`.
 
 ## Overview
 

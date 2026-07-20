@@ -8,11 +8,11 @@ export interface User {
 }
 
 /**
- * @autodoc GET /users
+ * @autoswag GET /users
  * @response {User[]} 200 Success
  */
 
 /**
- * @autodoc GET /users/map
+ * @autoswag GET /users/map
  * @response {Record<string, User>} 200 Success
  */

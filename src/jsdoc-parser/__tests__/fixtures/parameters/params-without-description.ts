@@ -1,5 +1,5 @@
 /**
- * @autodoc GET /search
+ * @autoswag GET /search
  * @queryParam {string} q
  * @queryParam {number} [limit]
  */

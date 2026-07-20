@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: Swagger Autodoc
+  name: Autoswag
   text: OpenAPI from TypeScript
   tagline: Generate OpenAPI documentation from JSDoc comments and TypeScript types. Keep your API docs in sync with your code automatically.
   actions:
@@ -11,7 +11,7 @@ hero:
       link: /guide/installation
     - theme: alt
       text: View on GitHub
-      link: https://github.com/seyves/swagger-autodoc
+      link: https://github.com/seyves/autoswag
     - theme: alt
       text: Introduction
       link: /guide/introduction

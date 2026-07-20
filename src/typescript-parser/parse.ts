@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import { typeToTree, type Context } from '@/typescript-parser/tree'
 import * as nodes from '@/typescript-parser/nodes'
-import { AutodocError } from '@/common/errors'
+import { AutoswagError } from '@/common/errors'
 
 interface SourceFileWithLocals extends ts.SourceFile {
     locals?: ts.SymbolTable
@@ -93,7 +93,7 @@ export function parseTypeExpression(
         throw new Error(`Source file not found: ${fileName}`)
     }
     const originalText = sourceFile.getFullText()
-    const newText = `${originalText}\ntype __AutodocInlineType = ${typeExpression}`
+    const newText = `${originalText}\ntype __AutoswagInlineType = ${typeExpression}`
 
     const updatedSource = ts.createSourceFile(fileName, newText, sourceFile.languageVersion, true)
 
@@ -136,7 +136,7 @@ export function parseTypeExpression(
 
     const typeAlias = newSourceFile.statements[newSourceFile.statements.length - 1]
     if (!typeAlias || !ts.isTypeAliasDeclaration(typeAlias)) {
-        throw new AutodocError(
+        throw new AutoswagError(
             `Invalid type expression: '${typeExpression}'`,
             `${fileName}:${position.join(':')}`,
         )
@@ -155,7 +155,7 @@ export function parseTypeExpression(
     if (foundDiagnostic) {
         const msg = foundDiagnostic.messageText.toString()
         const tsError = msg[msg.length - 1] === '.' ? msg.slice(0, msg.length - 1) : msg
-        throw new AutodocError(
+        throw new AutoswagError(
             `Invalid type expression: '${typeExpression}' (${tsError})`,
             `${fileName}:${position.join(':')}`,
         )

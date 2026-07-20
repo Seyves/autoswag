@@ -1,6 +1,6 @@
 import type ts from 'typescript'
 import * as utils from '@/typescript-parser/utils'
-import { AutodocError, getLocationFromSymbol } from '@/common/errors'
+import { AutoswagError, getLocationFromSymbol } from '@/common/errors'
 
 // TODO: add tests for multiline descriptions.
 
@@ -91,7 +91,7 @@ function parseRawTags(symbol: ts.Symbol, rawTags: Record<string, string>): Meta 
                 try {
                     tags.example = JSON.parse(value)
                 } catch (e: any) {
-                    throw new AutodocError(
+                    throw new AutoswagError(
                         `Cannot parse tag @example (should be valid JSON) on symbol '${symbol.name}'`,
                         getLocationFromSymbol(symbol),
                     )

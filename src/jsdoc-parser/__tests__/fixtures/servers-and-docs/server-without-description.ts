@@ -1,4 +1,4 @@
 /**
- * @autodoc GET /ping
+ * @autoswag GET /ping
  * @server https://localhost:3000
  */

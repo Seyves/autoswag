@@ -25,7 +25,7 @@ export type User = z.infer<typeof UserSchema>
 
 // Use in endpoint
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @accept {User} application/json
  * @response {User} 201 Created
  */

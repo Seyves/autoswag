@@ -1,6 +1,6 @@
-# Swagger Autodoc
+# Autoswag
 
-[![npm version](https://img.shields.io/npm/v/swagger-autodoc.svg)](https://www.npmjs.com/package/swagger-autodoc)
+[![npm version](https://img.shields.io/npm/v/autoswag.svg)](https://www.npmjs.com/package/autoswag)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
@@ -19,12 +19,12 @@ TypeScript-first tool that generates OpenAPI documentation from JSDoc comments a
 ## Installation
 
 ```bash
-npm install -D swagger-autodoc
+npm install -D autoswag
 ```
 
 ## Documentation
 
-Full documentation available at [swagger-autodoc.vercel.app](https://swagger-autodoc.vercel.app/)
+Full documentation available at [autoswag.vercel.app](https://swagger-autoswag.vercel.app/)
 
 ## Roadmap
 

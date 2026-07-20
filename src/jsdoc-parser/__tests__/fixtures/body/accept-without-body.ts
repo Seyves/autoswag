@@ -1,4 +1,4 @@
 /**
- * @autodoc PUT /users/{id}
+ * @autoswag PUT /users/{id}
  * @accept {User} application/json
  */

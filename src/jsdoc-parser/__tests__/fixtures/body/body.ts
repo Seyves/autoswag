@@ -1,5 +1,5 @@
 /**
- * @autodoc PUT /users/{id}
+ * @autoswag PUT /users/{id}
  * @body required User payload
  * @accept {User} application/json
  */

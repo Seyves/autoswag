@@ -1,13 +1,13 @@
 import { Post, CreatePostRequest } from './types'
 
 /**
- * @autodoc GET /posts
+ * @autoswag GET /posts
  * @queryParam {string} [authorId] Filter by author
  * @response {Post} 200 List of posts
  */
 
 /**
- * @autodoc POST /posts
+ * @autoswag POST /posts
  * @body required Post data
  * @accept {CreatePostRequest} application/json
  * @response {Post} 201 Post created

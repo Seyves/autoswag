@@ -1,6 +1,6 @@
 # JSDoc Tags Overview
 
-Swagger Autodoc uses JSDoc comment blocks to define API endpoints. This page provides an overview of all available tags.
+Autoswag uses JSDoc comment blocks to define API endpoints. This page provides an overview of all available tags.
 
 ## Tag Categories
 
@@ -10,7 +10,7 @@ Define OpenAPI [Operation Object](https://spec.openapis.org/oas/v3.1.0.html#oper
 
 | Tag | Purpose | 
 |-----|---------|
-| [`@autodoc`](./operation-object#autodoc) | Define HTTP method and path | 
+| [`@autoswag`](./operation-object#autoswag) | Define HTTP method and path | 
 | [`@tag`](./operation-object#tag) | Group endpoints |
 | [`@summary`](./operation-object#summary) | Brief endpoint description | 
 | [`@externalDocs`](./operation-object#externaldocs) | Link to external docs |
@@ -53,7 +53,7 @@ Reference TypeScript types using `{type}`:
 
 ```ts
 /**
- * @autodoc POST /users
+ * @autoswag POST /users
  * @accept {CreateUserRequest} application/json
  * @response {User} 201 Created
  */
@@ -67,7 +67,7 @@ Here's a complete endpoint using multiple tags:
 
 ```ts
 /**
- * @autodoc PUT /users/{id}
+ * @autoswag PUT /users/{id}
  * @operationId updateUser
  * @summary Update user information
  * @tag Users
@@ -111,7 +111,7 @@ Some tags can be used multiple times:
 
 ```ts
 /**
- * @autodoc GET /search
+ * @autoswag GET /search
  * 
  * @tag Users
  * @tag Products

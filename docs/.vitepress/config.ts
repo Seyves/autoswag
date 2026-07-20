@@ -3,7 +3,7 @@ import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-i
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    title: 'Swagger Autodoc',
+    title: 'Autoswag',
     description: 'Generate OpenAPI documentation from TypeScript types and JSDoc comments',
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config

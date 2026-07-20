@@ -383,8 +383,8 @@ describe('Generator - Component Management', () => {
             expect(result.components.schemas).toEqual({})
         })
 
-        test('should handle files with no autodoc but with types', () => {
-            const files = [`${fixtures}/edge-cases/no-autodoc.ts`]
+        test('should handle files with no autoswag but with types', () => {
+            const files = [`${fixtures}/edge-cases/no-autoswag.ts`]
             const result = generate({ source: files, version: OpenApiVersion.v30 })
 
             // Should not create components if types aren't referenced
