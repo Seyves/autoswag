@@ -2,6 +2,18 @@
   "name": "swagger-autodoc",
   "version": "0.1.0",
   "description": "Generate swagger documentation with automatically parsed components schemas from you .ts files!",
+  "homepage": "https://swagger-autodoc.vercel.app/",
+  "bugs": "https://github.com/Seyves/swagger-autodoc/issues",
+  "license": "ISC",
+  "author": "Seyves",
+  "files": [
+    "dist/**",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Seyves/swagger-autodoc.git"
+  },
   "scripts": {
     "test": "vitest",
     "build": "tsc && tsc-alias",
@@ -10,8 +22,6 @@
     "docs:preview": "vitepress preview docs"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
   "dependencies": {
     "comment-parser": "^1.4.7",

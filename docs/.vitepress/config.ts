@@ -49,7 +49,6 @@ export default defineConfig({
                     items: [
                         { text: 'REST API', link: '/guide/rest-api-example' },
                         { text: 'With Zod', link: '/guide/zod-example' },
-                        { text: 'With Express', link: '/guide/express-example' },
                     ],
                 },
             ],
