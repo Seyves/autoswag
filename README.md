@@ -19,7 +19,7 @@ TypeScript-first tool that generates OpenAPI documentation from JSDoc comments a
 ## Installation
 
 ```bash
-npm install swagger-autodoc
+npm install -D swagger-autodoc
 ```
 
 ## Documentation

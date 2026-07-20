@@ -1,7 +1,7 @@
 {
   "name": "swagger-autodoc",
   "version": "0.1.0",
-  "description": "Generate swagger documentation with automatically parsed components schemas from you .ts files!",
+  "description": "Generate swagger documentation with automatically parsed schemas from your .ts files!",
   "homepage": "https://swagger-autodoc.vercel.app/",
   "bugs": "https://github.com/Seyves/swagger-autodoc/issues",
   "license": "ISC",
@@ -10,10 +10,20 @@
     "dist/**",
     "README.md"
   ],
+  "keywords": ["openapi", "swagger", "typescript", "jsdoc", "api-documentation", "openapi-generator"], 
   "repository": {
     "type": "git",
     "url": "https://github.com/Seyves/swagger-autodoc.git"
   },
+  "main": "./dist/generator.js",
+  "exports": {
+    ".": {
+      "types": "./dist/generator.d.ts",
+      "default": "./dist/generator.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "scripts": {
     "test": "vitest",
     "build": "tsc && tsc-alias",
@@ -21,19 +31,11 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
-  "keywords": [],
   "type": "module",
   "dependencies": {
     "comment-parser": "^1.4.7",
     "tinyglobby": "^0.2.17",
     "typescript": "^6.0.3"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/generator.d.ts",
-      "default": "./dist/generator.js"
-    },
-    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
