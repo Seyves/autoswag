@@ -6,7 +6,7 @@ describe('Error Handling', () => {
 
     test('should throw on invalid method', () => {
         expect(() => parsePaths(`${fixtures}/invalid-method.ts`)).toThrow(
-            '@autodoc tag contains invalid request method: "MET"',
+            `@autodoc tag contains invalid request method: 'MET'`,
         )
     })
 
@@ -24,7 +24,7 @@ describe('Error Handling', () => {
 
     test('should throw on request with invalid name', () => {
         expect(() => parsePaths(`${fixtures}/body-invalid-name.ts`)).toThrow(
-            `@body tag should contain "optional" or "required" right after declaration`,
+            `@body tag should contain 'optional' or 'required' right after declaration`,
         )
     })
 

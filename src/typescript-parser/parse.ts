@@ -1,6 +1,7 @@
 import ts from 'typescript'
 import { typeToTree, type Context } from '@/typescript-parser/tree'
 import * as nodes from '@/typescript-parser/nodes'
+import { AutodocError } from '@/common/errors'
 
 interface SourceFileWithLocals extends ts.SourceFile {
     locals?: ts.SymbolTable
@@ -16,7 +17,7 @@ export function parse(
     const checker = program.getTypeChecker()
     const source = program.getSourceFile(fileName) as SourceFileWithLocals
 
-    if (!source) throw new Error('Cannot get source file')
+    if (!source) throw new Error(`Cannot find source file ${fileName}`)
 
     const rootChildren = source.getChildren()
     const syntaxList = rootChildren[0]!
@@ -34,7 +35,6 @@ export function parse(
         }
         const type = checker.getTypeAtLocation(child)
         let symbol = type.symbol
-
         // For type alias declarations, get the symbol from the name node
         // because type.symbol points to the anonymous type literal, not the alias
         if (child.kind === ts.SyntaxKind.TypeAliasDeclaration) {
@@ -50,29 +50,27 @@ export function parse(
         const symbol = source.locals.get(ts.escapeLeadingUnderscores(typeName))
         if (!symbol) return
 
-        // Check if it's a TypeAlias (JSDoc typedef)
-        if (symbol.flags & ts.SymbolFlags.TypeAlias) {
-            const type = checker.getDeclaredTypeOfSymbol(symbol)
-            return typeToTree(ctx, [], type, symbol)
-        }
-
-        // Check if it's an import
         const decl = symbol.declarations?.[0]
-        if (!decl || !ts.isImportSpecifier(decl)) return
+        if (!decl) return
 
-        const importDecl = decl.parent.parent.parent
-        const isJSDocImport = !ts.isImportDeclaration(importDecl)
-
-        if (isJSDocImport) {
-            // JSDoc @import - use getTypeAtLocation which properly resolves JSDoc imports
+        // Check if it's JSDoc @typedef
+        if (ts.isJSDocTypedefTag(decl)) {
             const type = checker.getTypeAtLocation(decl)
             return typeToTree(ctx, [], type, type.aliasSymbol)
-        } else {
+        }
+        // Check if it's an import
+        if (!ts.isImportSpecifier(decl)) return
+
+        if (ts.isImportDeclaration(decl.parent.parent.parent)) {
             // Regular TypeScript import - use getAliasedSymbol
             const resSymbol = checker.getAliasedSymbol(symbol)
             const type = checker.getDeclaredTypeOfSymbol(resSymbol)
 
             return typeToTree(ctx, [], type, resSymbol)
+        } else {
+            // JSDoc @import - use getTypeAtLocation which properly resolves JSDoc imports
+            const type = checker.getTypeAtLocation(decl)
+            return typeToTree(ctx, [], type, type.aliasSymbol)
         }
     }
 }
@@ -87,14 +85,13 @@ export function parseTypeExpression(
     components: Record<string, nodes.Node>,
     fileName: string,
     typeExpression: string,
+    position: [number, number],
     debug?: boolean,
 ): nodes.Node | undefined {
     const sourceFile = program.getSourceFile(fileName)
-
     if (!sourceFile) {
         throw new Error(`Source file not found: ${fileName}`)
     }
-
     const originalText = sourceFile.getFullText()
     const newText = `${originalText}\ntype __AutodocInlineType = ${typeExpression}`
 
@@ -102,7 +99,6 @@ export function parseTypeExpression(
 
     const oldOptions = program.getCompilerOptions()
     const host = ts.createCompilerHost(oldOptions)
-
     const originalGetSourceFile = host.getSourceFile
 
     // Override to return our modified source for the target file
@@ -132,20 +128,38 @@ export function parseTypeExpression(
     // - Type information for unchanged files
     // - Module resolution results
     const newProgram = ts.createProgram(program.getRootFileNames(), oldOptions, host, program)
-
     const newChecker = newProgram.getTypeChecker()
-
     const newSourceFile = newProgram.getSourceFile(fileName)
     if (!newSourceFile) {
         throw new Error(`Updated source file not found: ${fileName}`)
     }
 
     const typeAlias = newSourceFile.statements[newSourceFile.statements.length - 1]
-
     if (!typeAlias || !ts.isTypeAliasDeclaration(typeAlias)) {
-        throw new Error(`Invalid type expression: ${typeExpression}`)
+        throw new AutodocError(
+            `Invalid type expression: '${typeExpression}'`,
+            `${fileName}:${position.join(':')}`,
+        )
     }
+    const diagnostics = ts.getPreEmitDiagnostics(newProgram)
+    const foundDiagnostic = diagnostics.find((d) => {
+        return (
+            d.file === newSourceFile &&
+            d.start !== undefined &&
+            d.length !== undefined &&
+            d.start >= typeAlias.getStart() &&
+            d.start + d.length <= typeAlias.getEnd()
+        )
+    })
 
+    if (foundDiagnostic) {
+        const msg = foundDiagnostic.messageText.toString()
+        const tsError = msg[msg.length - 1] === '.' ? msg.slice(0, msg.length - 1) : msg
+        throw new AutodocError(
+            `Invalid type expression: '${typeExpression}' (${tsError})`,
+            `${fileName}:${position.join(':')}`,
+        )
+    }
     const resolvedType = newChecker.getTypeAtLocation(typeAlias.type)
 
     const ctx: Context = {

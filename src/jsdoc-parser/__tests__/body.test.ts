@@ -27,6 +27,7 @@ describe('Responses', () => {
                     schema: {
                         $tsType: 'User',
                         $fileName: fileName,
+                        $position: [4, 13]
                     },
                 },
             },
@@ -44,6 +45,7 @@ describe('Responses', () => {
                     schema: {
                         $tsType: 'User',
                         $fileName: fileName,
+                        $position: [3, 13]
                     },
                 },
             },

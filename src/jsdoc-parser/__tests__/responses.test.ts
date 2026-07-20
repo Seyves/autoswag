@@ -15,6 +15,7 @@ describe('Responses', () => {
         expect(content.schema).toStrictEqual({
             $tsType: 'User',
             $fileName: fileName,
+            $position: [3, 15],
         })
     })
 
@@ -29,6 +30,7 @@ describe('Responses', () => {
         expect(content.schema).toStrictEqual({
             $tsType: 'User',
             $fileName: fileName,
+            $position: [3, 15],
         })
     })
 })

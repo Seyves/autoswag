@@ -60,7 +60,7 @@ export function typeToTree(
         // Symbol IDs are unreliable: JSDoc imports share id=0, generics share anonymous type IDs
         if (symbolStack.includes(type)) {
             throw new AutodocError(
-                `Recursive declaration encountered on symbol ${symbol.name}. To fix this issue, mark recursive type with @component tag`,
+                `Recursive declaration encountered on symbol '${symbol.name}'. To fix this issue, mark recursive type with @component tag`,
                 getLocationFromSymbol(symbol),
             )
         } else {
@@ -158,7 +158,8 @@ function intersectionToTree(
     const properties: Record<string, nodes.Node> = {}
     const required: string[] = []
 
-    for (const item of type.types) {
+    for (let i = type.types.length - 1; i >= 0; i--) {
+        const item = type.types[i]!
         const objectIndexInfo = getObjectIndexInfo(ctx, item)
         // Do not account for Record types
         if (objectIndexInfo) continue

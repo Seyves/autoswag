@@ -1,4 +1,4 @@
-import { AutodocError, getLocationFromLine } from '@/common/errors'
+import { AutodocError, getLocationFromLine, getTypePositionFromLine } from '@/common/errors'
 import * as commentParser from 'comment-parser'
 import fs from 'fs'
 import * as openApiPaths from '@/jsdoc-parser/openapi-paths'
@@ -73,7 +73,7 @@ function parseJSDocBlock(
 
     if (!httpMethods.includes(autodocTag.name)) {
         throw new AutodocError(
-            `@autodoc tag contains invalid request method: "${autodocTag.name}"`,
+            `@autodoc tag contains invalid request method: '${autodocTag.name}'`,
             getLocationFromLine(fileName, autodocTag.source),
         )
     }
@@ -208,7 +208,7 @@ function parseJSDocBlock(
                         break
                     default:
                         throw new AutodocError(
-                            `@body tag should contain "optional" or "required" right after declaration`,
+                            `@body tag should contain 'optional' or 'required' right after declaration`,
                             getLocationFromLine(fileName, tag.source),
                         )
                 }
@@ -303,12 +303,14 @@ function getContentFromTagType(
         return {
             $tsType: match[0],
             $fileName: fileName,
+            $position: getTypePositionFromLine(tag.source),
         }
     }
     // if type expression
     return {
         $tsType: tag.type,
         $fileName: fileName,
+        $position: getTypePositionFromLine(tag.source),
         $isExpr: true,
     }
 }

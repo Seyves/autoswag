@@ -19,6 +19,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 16],
                             },
                         },
                     ],
@@ -42,6 +43,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 17],
                             },
                         },
                         {
@@ -52,6 +54,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'number',
                                 $fileName: fileName,
+                                $position: [4, 17],
                             },
                         },
                     ],
@@ -75,6 +78,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 18],
                             },
                         },
                         {
@@ -85,6 +89,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [4, 18],
                             },
                         },
                     ],
@@ -108,6 +113,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 18],
                             },
                         },
                         {
@@ -118,6 +124,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [4, 18],
                             },
                         },
                     ],
@@ -171,6 +178,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 17],
                             },
                         },
                         {
@@ -180,6 +188,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'number',
                                 $fileName: fileName,
+                                $position: [4, 17],
                             },
                         },
                     ],
@@ -203,6 +212,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [3, 16],
                             },
                         },
                         {
@@ -213,6 +223,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'boolean',
                                 $fileName: fileName,
+                                $position: [4, 17],
                             },
                         },
                         {
@@ -223,6 +234,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [5, 18],
                             },
                         },
                         {
@@ -233,6 +245,7 @@ describe('Parameters', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [6, 18],
                             },
                         },
                     ],

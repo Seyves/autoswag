@@ -16,7 +16,7 @@ describe('Intersections', () => {
                 id: { type: nodes.Kind.String },
                 name: { type: nodes.Kind.String },
             },
-            required: ['id', 'name'],
+            required: ['name', 'id'],
         })
     })
 
@@ -31,7 +31,7 @@ describe('Intersections', () => {
                 name: { type: nodes.Kind.String },
                 age: { type: nodes.Kind.Number },
             },
-            required: ['id', 'name', 'age'],
+            required: ['age', 'name', 'id'],
         })
     })
 
@@ -69,7 +69,7 @@ describe('Intersections', () => {
                 name: { type: nodes.Kind.String },
                 age: { type: nodes.Kind.Number },
             },
-            required: ['id', 'name', 'age'],
+            required: ['name', 'age', 'id'],
         })
     })
 

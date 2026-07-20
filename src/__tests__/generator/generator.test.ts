@@ -202,6 +202,12 @@ describe('Generator - Basic Orchestration', () => {
                 },
             })
         })
+        test('should throw on invalid type expression', () => {
+            const files = [`${fixtures}/simple/invalid-type-expression.ts`]
+            expect(() => {
+                generate({ source: files, version: OpenApiVersion.v30 })
+            }).toThrow('Invalid type expression')
+        })
     })
 
     describe('Empty and Edge Cases', () => {
@@ -226,7 +232,7 @@ describe('Generator - Basic Orchestration', () => {
 
             expect(() => {
                 generate({ source: files, version: OpenApiVersion.v30 })
-            }).toThrow('Cannot resolve type: NonExistentType')
+            }).toThrow(`Cannot find type: 'NonExistentType'`)
         })
     })
 

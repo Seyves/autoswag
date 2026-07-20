@@ -1,6 +1,7 @@
 export interface TypeReference {
     $tsType: string
     $fileName: string
+    $position: [number, number]
     $isExpr?: boolean
 }
 

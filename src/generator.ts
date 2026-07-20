@@ -12,6 +12,8 @@ import * as tsNodes from '@/typescript-parser/nodes'
 import type { Request } from './jsdoc-parser/openapi-paths'
 import { globSync } from 'tinyglobby'
 import path from 'path'
+import { AutodocError } from './common/errors'
+export { AutodocError } from './common/errors'
 
 export enum OpenApiVersion {
     v30 = '3.0.0',
@@ -168,6 +170,7 @@ function resolveTypeReference(ctx: GeneratorContext, ref: TypeReference): any {
             ctx.rawComponents,
             ref.$fileName,
             ref.$tsType,
+            ref.$position,
             ctx.debug,
         )
     } else {
@@ -175,7 +178,11 @@ function resolveTypeReference(ctx: GeneratorContext, ref: TypeReference): any {
     }
 
     if (!tree) {
-        throw new Error(`Cannot resolve type: ${ref.$tsType} in ${ref.$fileName}`)
+        console.log(`${ref.$fileName}:${ref.$position.join(':')}`)
+        throw new AutodocError(
+            `Cannot find type: '${ref.$tsType}'`,
+            `${ref.$fileName}:${ref.$position.join(':')}`,
+        )
     }
 
     const openApiNode = tsNodeToOpenApi(tree, ctx.version)

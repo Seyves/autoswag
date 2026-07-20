@@ -28,6 +28,7 @@ describe('Type parsing', () => {
         expect(content.schema).toStrictEqual({
             $tsType: 'User',
             $fileName: fileName,
+            $position: [3, 14],
         })
     })
 
@@ -43,6 +44,7 @@ describe('Type parsing', () => {
             $tsType: 'Record<string, Type>',
             $fileName: fileName,
             $isExpr: true,
+            $position: [3, 14],
         })
     })
 })

@@ -37,6 +37,7 @@ describe('Complex Combinations', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [9, 16],
                             },
                         },
                         {
@@ -47,6 +48,7 @@ describe('Complex Combinations', () => {
                             schema: {
                                 $tsType: 'boolean',
                                 $fileName: fileName,
+                                $position: [10, 17],
                             },
                         },
                         {
@@ -57,6 +59,7 @@ describe('Complex Combinations', () => {
                             schema: {
                                 $tsType: 'string',
                                 $fileName: fileName,
+                                $position: [11, 18],
                             },
                         },
                     ],
@@ -68,6 +71,7 @@ describe('Complex Combinations', () => {
                                 schema: {
                                     $tsType: 'PostData',
                                     $fileName: fileName,
+                                    $position: [13, 13],
                                 },
                             },
                         },
@@ -80,6 +84,7 @@ describe('Complex Combinations', () => {
                                     schema: {
                                         $tsType: 'Post',
                                         $fileName: fileName,
+                                        $position: [14, 15],
                                     },
                                 },
                             },
@@ -91,6 +96,7 @@ describe('Complex Combinations', () => {
                                     schema: {
                                         $tsType: 'Error',
                                         $fileName: fileName,
+                                        $position: [15, 15],
                                     },
                                 },
                             },

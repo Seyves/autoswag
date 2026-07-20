@@ -2,6 +2,8 @@ import type ts from 'typescript'
 import * as utils from '@/typescript-parser/utils'
 import { AutodocError, getLocationFromSymbol } from '@/common/errors'
 
+// TODO: add tests for multiline descriptions.
+
 export type Meta = {
     description?: string
     example?: any
@@ -35,7 +37,7 @@ export function parseSymbolJSDoc(
             return parseRawTags(symbol, metadata)
         }
     } else {
-        const description = docText.replace(/\n/g, ' ').trim()
+        const description = docText.replace(/\n+/g, ' ').trim()
         const jsDocTags = symbol.getJsDocTags()
         const rawTags: Record<string, string> = {}
         for (const tag of jsDocTags) {
@@ -90,7 +92,7 @@ function parseRawTags(symbol: ts.Symbol, rawTags: Record<string, string>): Meta 
                     tags.example = JSON.parse(value)
                 } catch (e: any) {
                     throw new AutodocError(
-                        `Cannot parse tag @example (should be valid JSON) on symbol ${symbol.name}`,
+                        `Cannot parse tag @example (should be valid JSON) on symbol '${symbol.name}'`,
                         getLocationFromSymbol(symbol),
                     )
                 }
