@@ -2,50 +2,143 @@
 
 ## Overview
 
-Use Zod schemas for validation, then infer TypeScript types for OpenAPI generation.
+Autoswag supports Zod out of the box. This is one of the most convenient and easiest ways to maintain you API.
+
+::: info
+Autoswag does not support automatic format resolution for now.
+:::
 
 ## Example
 
 ```ts
 import { z } from 'zod'
 
-// Define Zod schema
-export const UserSchema = z.object({
-    id: z.string().uuid(),
-    name: z.string().min(1).max(100),
-    email: z.string().email(),
-    age: z.number().int().min(18).max(120).optional(),
-    role: z.enum(['user', 'admin']),
-    createdAt: z.string().datetime(),
+export const AddressSchema = z.object({
+    /** Street address */
+    street: z.string(),
+    city: z.string(),
+    zip: z.string(),
 })
 
-// Infer TypeScript type
-/** @component User */
+export const UserSchema = z.object({
+    /** @format uuid */
+    id: z.uuid(),
+    /** User name */
+    name: z.string(),
+    /** @format email */
+    email: z.email(),
+    age: z.number().int().optional(),
+    address: AddressSchema,
+    role: z.enum(['user', 'admin']),
+    /** @format datetime */
+    createdAt: z.iso.datetime(),
+})
+
 export type User = z.infer<typeof UserSchema>
 
-// Use in endpoint
 /**
  * @autoswag POST /users
- * @accept {User} application/json
- * @response {User} 201 Created
+ * @accept {User}
+ * @response {{id: string}} 201 Created
  */
 export async function createUser(req, res) {
-    const data = UserSchema.parse(req.body) // Runtime validation
+    const data = UserSchema.parse(req.body)
     // ... create user
 }
 ```
 
-The `@component` tag works on the inferred type, generating OpenAPI from TypeScript.
+**Generated OpenApi paths:**
 
-## Metadata
-
-The only drawback of this approach is that [metadata](./metadata-tags) cannot be specified without redefining the property:
-
-```ts
-// Infer TypeScript type
-/** @component User */
-export type User = {
-    /** @format uuid */
-    id: string 
-} & z.infer<typeof UserSchema>
+```json
+{
+  "/users": {
+    "post": {
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "User name"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "address": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string",
+                      "description": "Street address"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "street",
+                    "city",
+                    "zip"
+                  ]
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "admin"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "datetime"
+                },
+                "age": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "email",
+                "address",
+                "role",
+                "createdAt"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```

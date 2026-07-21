@@ -263,18 +263,18 @@ function objectToTree(ctx: Context, symbolStack: ts.Type[], type: ts.Type): node
     for (const prop of type.getProperties()) {
         if (utils.hasSymbolFlags(prop, [ts.SymbolFlags.Method])) continue
 
-        let type = ctx.checker.getTypeOfSymbol(prop)
+        let propType = ctx.checker.getTypeOfSymbol(prop)
 
         if (!utils.hasSymbolFlags(prop, [ts.SymbolFlags.Optional])) {
             required.push(prop.name)
-        } else if (type.isUnion()) {
-            type = utils.resolveOptionalUnionProp(type)
+        } else if (propType.isUnion()) {
+            propType = utils.resolveOptionalUnionProp(propType)
         }
 
-        const node = typeToTree(ctx, symbolStack, type)
+        const node = typeToTree(ctx, symbolStack, propType)
 
         // Get property documentation
-        const info = tags.parseSymbolJSDoc(ctx.checker, prop, symbol)
+        let info = tags.parseSymbolJSDoc(ctx.checker, prop, symbol)
 
         // Component tags only allowed on definitions
         delete info.component
