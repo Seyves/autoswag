@@ -45,12 +45,3 @@ If you use path aliases (like `@/*`), Autoswag will respect them from your tscon
 ::: tip 
 TypeScript configuration used by Autoswag can be overridden in the config. See [compilerOptions](./configuration#compilerOptions)
 :::
-
-## Next Steps
-
-Now that installation is complete:
-
-1. **[Quick Start →](./quick-start)** - Generate your first OpenAPI document
-2. **[Configuration →](./configuration)** - Learn about all configuration options
-
-Or jump straight to the **[JSDoc Tags reference →](./tags-overview)** to learn how to document endpoints.

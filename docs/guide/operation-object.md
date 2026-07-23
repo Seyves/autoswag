@@ -1,6 +1,6 @@
 # Operation Object
 
-Tags that define OpenAPI [Operation Object](https://spec.openapis.org/oas/v3.1.0.html#operation-object)
+Tags that define OpenAPI [Operation Object](https://spec.openapis.org/oas/v3.1.0.html#operation-object).
 
 ## @autoswag
 
@@ -62,7 +62,7 @@ Path parameters in the URL are automatically detected. You still need `@pathPara
 
 ## @tag
 
-Defines `tags` field
+Defines `tags` field.
 
 ### Syntax
 
@@ -74,7 +74,7 @@ Defines `tags` field
 
 **Single tag:**
 
-```ts
+```ts{3}
 /**
  * @autoswag GET /users
  * @tag Users
@@ -84,7 +84,7 @@ Defines `tags` field
 
 **Multiple tags:**
 
-```ts
+```ts{3-4}
 /**
  * @autoswag POST /users/{id}/avatar
  * @tag Users
@@ -97,38 +97,45 @@ Defines `tags` field
 
 ### Tag Descriptions
 
-Define tag descriptions in `baseDoc`:
+Define tag descriptions in [`root`](./configuration#documents-n-root).
 
-```ts
-generate({
-    source: ['src/api/**/*.ts'],
-    baseDoc: {
-        info: { title: 'My API', version: '1.0.0' },
-        tags: [
-            {
-                name: 'Users',
-                description: 'User management endpoints',
-            },
-            {
-                name: 'Products',
-                description: 'Product catalog operations',
-            },
-            {
-                name: 'Admin',
-                description: 'Administrative functions (requires admin role)',
-                externalDocs: {
-                    description: 'Admin Guide',
-                    url: 'https://docs.example.com/admin',
-                },
-            },
-        ],
-    },
-})
+## description
+
+Defines `description` field.
+
+There is no tag for description, **Autoswag** takes JSDoc description text.
+
+### Example
+
+One line:
+
+```ts{2}
+/**
+ * Retrieve detailed user information including profile and settings.
+ * @autoswag GET /users
+ */
+```
+
+Multiple lines:
+
+```ts{2-6}
+/**
+ * Retrieve detailed user information including profile and settings.
+ *
+ * This endpoint returns comprehensive user data.
+ * Use GET /users/{id}/profile for a lighter response with
+ * just profile information.
+ *
+ * @autoswag GET /users/{id}
+ * @summary Get user details
+ * @pathParam {string} id User ID
+ * @response {UserDetails} 200 Success
+ */
 ```
 
 ## @summary
 
-Defines `summary` field
+Defines `summary` field.
 
 ### Syntax
 
@@ -138,39 +145,16 @@ Defines `summary` field
 
 ### Example
 
-```ts
+```ts{3}
 /**
- * @autoswag GET /users
- * @summary List all users
+* @autoswag GET /users
+* @summary List all users
  */
 ```
-
-### With Long Descriptions
-
-Combine with JSDoc description:
-
-```ts
-/**
- * Retrieve detailed user information including profile, settings, and activity.
- *
- * This endpoint returns comprehensive user data. Use GET /users/{id}/profile
- * for a lighter response with just profile information.
- *
- * @autoswag GET /users/{id}
- * @summary Get user details
- * @pathParam {string} id User ID
- * @response {UserDetails} 200 Success
- */
-```
-
-In the generated OpenAPI:
-
-- `@summary` → `summary` field (short, shows in lists)
-- JSDoc description → `description` field (long, shows in detail view)
 
 ## @externalDocs
 
-Defines `externalDocs` field
+Defines `externalDocs` field.
 
 ### Syntax
 
@@ -180,15 +164,7 @@ Defines `externalDocs` field
 
 ### Example
 
-```ts
-/**
- * @autoswag POST /payments
- * @summary Process payment
- * @accept {PaymentRequest}
- * @response {PaymentResult} 200 Payment processed
- * @externalDocs https://docs.example.com/payments
- */
-
+```ts{6}
 /**
  * @autoswag POST /webhooks
  * @summary Receive webhook
@@ -200,7 +176,7 @@ Defines `externalDocs` field
 
 ## @operationId
 
-Defines `operationId` field
+Defines `operationId` field.
 
 ### Syntax
 
@@ -210,17 +186,16 @@ Defines `operationId` field
 
 ### Example
 
-```ts
+```ts{3}
 /**
  * @autoswag GET /users/{id}
  * @operationId getUserById
  */
-export function getUser() {}
 ```
 
 ## @deprecated
 
-Defines `deprecated` field
+Defines `deprecated` field.
 
 ### Syntax
 
@@ -230,7 +205,7 @@ Defines `deprecated` field
 
 ### Example
 
-```ts
+```ts{4}
 /**
  * @autoswag GET /api/v1/users
  * @summary List users
@@ -242,8 +217,10 @@ Defines `deprecated` field
 
 Defines `security` field.
 
+If multiple security schemes are specified, **Autoswag** interprets them as an OR condition in the OpenAPI security requirement.
+
 ::: info
-More about using security **[here](./security)**
+The security tag just references already defined [`document[n].components`](./configuration#documents-n-components) security schemas.
 :::
 
 ### Syntax
@@ -252,12 +229,12 @@ More about using security **[here](./security)**
 @security <schemeName> [scope1 scope2 ...]
 ```
 
-- `schemeName` - Name of the security scheme (defined in baseDoc)
+- `schemeName` - Name of the pre-defined security scheme
 - `scopes` - Optional list of required scopes (for OAuth2/OpenID Connect)
 
 ### Example
 
-```ts
+```ts{4}
 /**
  * @autoswag GET /profile
  * @summary Get current user profile
@@ -269,7 +246,7 @@ More about using security **[here](./security)**
 
 ## @server
 
-Defines `servers` field
+Defines `servers` field.
 
 ### Syntax
 
@@ -281,7 +258,7 @@ Defines `servers` field
 
 **Different server for specific endpoints:**
 
-```ts
+```ts{3}
 /**
  * @autoswag POST /upload
  * @server https://cdn.example.com CDN upload endpoint
@@ -292,7 +269,7 @@ Defines `servers` field
 
 **Multiple servers:**
 
-```ts
+```ts{3-4}
 /**
  * @autoswag GET /data
  * @server https://api-primary.example.com Primary datacenter

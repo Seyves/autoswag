@@ -1,6 +1,6 @@
 # Request Body Object
 
-Tags that define OpenAPI [Requst Body Object](https://spec.openapis.org/oas/v3.1.0.html#request-body-object)
+Tags that define OpenAPI [Requst Body Object](https://spec.openapis.org/oas/v3.1.0.html#request-body-object).
 
 ## Overview
 
@@ -9,7 +9,10 @@ Request bodies are defined using two tags:
 1. **`@body`** - Metadata (required/optional, description)
 2. **`@accept`** - Schema and content-type
 
-Both tags work together to define the request body.
+::: info
+You can use **`@accept`** without **`@body`**; however, **`@body`** cannot be used without **`@accept`**, since the OpenAPI content map is mandatory.
+
+:::
 
 ## @body
 
@@ -24,7 +27,7 @@ Defines `description` and `required` fields.
 
 ### Example
 
-```ts
+```ts{3,9}
 /**
  * @autoswag POST /users
  * @body required User data
@@ -37,11 +40,6 @@ Defines `description` and `required` fields.
  * @accept {Partial<User>} application/json
  */
 ```
-
-::: info
-You can use **`@accept`** without **`@body`**; however, **`@body`** cannot be used without **`@accept`**, since the OpenAPI content map is mandatory.
-
-:::
 
 ## @accept
 
@@ -58,7 +56,7 @@ Defines element in `content` map field.
 
 ### Example
 
-```ts
+```ts{4,11-12}
 /**
  * @autoswag POST /users
  * @body required User data

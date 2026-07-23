@@ -51,7 +51,7 @@ Define OpenAPI [Response object](https://spec.openapis.org/oas/v3.1.0.html#respo
 
 Reference TypeScript types using `{type}`:
 
-```ts
+```ts{4}
 /**
  * @autoswag POST /users
  * @accept {CreateUserRequest} application/json
@@ -59,7 +59,7 @@ Reference TypeScript types using `{type}`:
  */
 ```
 
-[See more about type referencing →](./type-referencing)
+[See more about type referencing ->](./type-referencing)
 
 ## Complete Example
 
@@ -109,7 +109,7 @@ This generates a complete OpenAPI operation with:
 
 Some tags can be used multiple times:
 
-```ts
+```ts{7-9,11-12,14-16}
 /**
  * @autoswag GET /search
  * 

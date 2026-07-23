@@ -2,14 +2,7 @@
 
 ## Overview
 
-Type parameters in curly braces `{type}` are used throughout Autoswag to reference schemas. They appear in:
-
-- [`@accept`](./request-body-object#accept) - Request body schema
-- [`@response`](./response-object) - Response body schema
-- [`@pathParam`](./parameter-object#pathparam) - Path parameter type
-- [`@queryParam`](./parameter-object#queryparam) - Query parameter type
-- [`@headerParam`](./parameter-object#headerparam) - Header parameter type
-- [`@cookieParam`](./parameter-object#cookieparam) - Cookie parameter type
+Type parameters in curly braces `{type}` are used throughout Autoswag to reference schemas. They appear in: [`@accept`](./request-body-object#accept), [`@response`](./response-object), [`@pathParam`](./parameter-object#pathparam), [`@queryParam`](./parameter-object#queryparam), [`@headerParam`](./parameter-object#headerparam) and [`@cookieParam`](./parameter-object#cookieparam).
 
 ### Syntax
 
@@ -43,7 +36,7 @@ The simplest case - reference a basic JavaScript type directly.
 
 ```json
 {
-    "type": "number"
+  "type": "number"
 }
 ```
 
@@ -67,9 +60,9 @@ Reference any TypeScript type defined in your codebase. This is the primary feat
 
 ```ts
 interface User {
-    id: string
-    name: string
-    email?: string
+  id: string
+  name: string
+  email?: string
 }
 
 /**
@@ -83,20 +76,20 @@ interface User {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "string",
-            "format": "uuid"
-        },
-        "name": {
-            "type": "string"
-        },
-        "email": {
-            "type": "string"
-        }
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
     },
-    "required": ["id", "name"]
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "name"]
 }
 ```
 
@@ -112,9 +105,9 @@ Types can be imported from other files:
 
 ```ts [types/user.ts]
 export interface User {
-    id: string
-    name: string
-    email?: string
+  id: string
+  name: string
+  email?: string
 }
 ```
 
@@ -140,7 +133,7 @@ Use TypeScript syntax directly in the type parameter for inline types.
 
 ::: warning
 To implement such functionality, Autoswag is forced to create temporary source files.
-We do not recommend using type expressions for large projects and files.
+We do not recommend using too many type expressions for large projects and files.
 :::
 
 ### Example
@@ -157,42 +150,33 @@ We do not recommend using type expressions for large projects and files.
 
 ```json
 {
-    "type": "string",
-    "enum": ["success", "error"]
+  "type": "string",
+  "enum": ["success", "error"]
 }
 ```
 
 ## 4. OpenAPI Component References
 
-Reference pre-defined schemas in `baseDoc.components.schemas` using the `ref:` prefix.
+Reference pre-defined [`documents[n].components`](./configuration#documents-n-basedoc) schemas using the `ref:` prefix.
 
-### Defining Components in baseDoc
+Pre-defined components in configuration file:
 
-```ts
-import { generate, OpenApiVersion } from 'autoswag'
-
-const spec = generate({
-    source: ['src/api/**/*.ts'],
-    baseDoc: {
-        // ...
-        components: {
-            schemas: {
-                Error: {
-                    type: 'object',
-                    properties: {
-                        code: { type: 'string' },
-                        message: { type: 'string' },
-                    },
-                    required: ['code', 'message'],
-                },
-            },
-        },
-        // ...
+```js
+components: {
+  schemas: {
+    Error: {
+      type: 'object',
+      properties: {
+        code: { type: 'string' },
+        message: { type: 'string' },
+      },
+      required: ['code', 'message'],
     },
-})
+  },
+},
 ```
 
-### Using Component References
+Using Component Reference:
 
 ```ts
 /**
@@ -206,7 +190,7 @@ const spec = generate({
 
 ```json
 {
-    "$ref": "#/components/schemas/Error"
+  "$ref": "#/components/schemas/Error"
 }
 ```
 
@@ -242,8 +226,8 @@ Use built-in format strings directly for common patterns.
 
 ```json
 {
-    "type": "string",
-    "format": "uuid"
+  "type": "string",
+  "format": "uuid"
 }
 ```
 
@@ -261,8 +245,8 @@ Use built-in format strings directly for common patterns.
 
 ```json
 {
-    "type": "string",
-    "format": "email"
+  "type": "string",
+  "format": "email"
 }
 ```
 

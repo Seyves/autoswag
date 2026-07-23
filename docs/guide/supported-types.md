@@ -7,22 +7,22 @@ Autoswag uses the TypeScript compiler API to understand your types and convert t
 ### Basic Types
 
 ```ts
-type Email = string // → { "type": "string" }
-type IsValid = boolean // → { "type": "boolean" }
+type Email = string // -> { "type": "string" }
+type IsValid = boolean // -> { "type": "boolean" }
 ```
 
 ### Literal Types
 
 ```ts
-type Status = 'active' // → { "type": "string", "enum": ["active"] }
-type Code = 200 // → { "type": "number", "enum": [200] }
+type Status = 'active' // -> { "type": "string", "enum": ["active"] }
+type Code = 200 // -> { "type": "number", "enum": [200] }
 ```
 
 ### Any and Unknown
 
 ```ts
-type MyAny = any // → { } (empty schema, allows anything)
-type MyUnknown = unknown // → { } (empty schema)
+type MyAny = any // -> { } (empty schema, allows anything)
+type MyUnknown = unknown // -> { } (empty schema)
 ```
 
 ::: warning
@@ -35,9 +35,9 @@ type MyUnknown = unknown // → { } (empty schema)
 
 ```ts
 interface User {
-    id: string
-    name: string
-    email?: string // Optional
+  id: string
+  name: string
+  email?: string // Optional
 }
 ```
 
@@ -45,13 +45,13 @@ interface User {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "email": { "type": "string" }
-    },
-    "required": ["id", "name"]
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string" }
+  },
+  "required": ["id", "name"]
 }
 ```
 
@@ -59,8 +59,8 @@ interface User {
 
 ```ts
 type Point = {
-    x: number
-    y: number
+  x: number
+  y: number
 }
 ```
 
@@ -70,14 +70,14 @@ Works identically to interfaces.
 
 ```ts
 interface Address {
-    street: string
-    city: string
-    country: string
+  street: string
+  city: string
+  country: string
 }
 
 interface User {
-    name: string
-    address: Address
+  name: string
+  address: Address
 }
 ```
 
@@ -85,20 +85,20 @@ interface User {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "name": { "type": "string" },
-        "address": {
-            "type": "object",
-            "properties": {
-                "street": { "type": "string" },
-                "city": { "type": "string" },
-                "country": { "type": "string" }
-            },
-            "required": ["street", "city", "country"]
-        }
-    },
-    "required": ["name", "address"]
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "country": { "type": "string" }
+      },
+      "required": ["street", "city", "country"]
+    }
+  },
+  "required": ["name", "address"]
 }
 ```
 
@@ -106,7 +106,7 @@ interface User {
 
 ```ts
 interface Dictionary {
-    [key: string]: number
+  [key: string]: number
 }
 ```
 
@@ -114,10 +114,10 @@ interface Dictionary {
 
 ```json
 {
-    "type": "object",
-    "additionalProperties": {
-        "type": "number"
-    }
+  "type": "object",
+  "additionalProperties": {
+    "type": "number"
+  }
 }
 ```
 
@@ -125,8 +125,8 @@ interface Dictionary {
 
 ```ts
 interface User {
-    readonly id: string // Treated as required, no special OpenAPI handling
-    name: string
+  readonly id: string // Treated as required, no special OpenAPI handling
+  name: string
 }
 ```
 
@@ -139,19 +139,19 @@ OpenAPI doesn't have a `readonly` concept. The property is just required.
 ### Array Syntax
 
 ```ts
-// → { "type": "array", "items": { "type": "string" } }
+// -> { "type": "array", "items": { "type": "string" } }
 type Tags = string[]
-// → { "type": "array", "items": { "type": "number" } }
+// -> { "type": "array", "items": { "type": "number" } }
 type Numbers = Array<number>
-// → { "type": "array", "items": { "$ref": "#/components/schemas/User" }}
+// -> { "type": "array", "items": { "$ref": "#/components/schemas/User" }}
 type Users = User[]
 ```
 
 ### Nested Arrays
 
 ```ts
-type Matrix = number[][] // → array of arrays
-type Complex = User[][] // → array of array of User
+type Matrix = number[][] // -> array of arrays
+type Complex = User[][] // -> array of array of User
 ```
 
 ## Tuples
@@ -166,10 +166,10 @@ type Pair = [string, number]
 
 ```json
 {
-    "type": "array",
-    "prefixItems": [{ "type": "string" }, { "type": "number" }],
-    "minItems": 2,
-    "maxItems": 2
+  "type": "array",
+  "prefixItems": [{ "type": "string" }, { "type": "number" }],
+  "minItems": 2,
+  "maxItems": 2
 }
 ```
 
@@ -177,10 +177,10 @@ type Pair = [string, number]
 
 ```json
 {
-    "type": "array",
-    "items": {
-        "oneOf": [{ "type": "string" }, { "type": "number" }]
-    }
+  "type": "array",
+  "items": {
+    "oneOf": [{ "type": "string" }, { "type": "number" }]
+  }
 }
 ```
 
@@ -191,9 +191,9 @@ Multiple possible types, separated by `|`.
 ### Union of same type Primitives
 
 ```ts
-// → { "type": "string", "enum": ["pending", "active", "inactive"] }
+// -> { "type": "string", "enum": ["pending", "active", "inactive"] }
 type Status = 'pending' | 'active' | 'inactive'
-// → { "type": "number", "enum": [200, 404, 500] }
+// -> { "type": "number", "enum": [200, 404, 500] }
 type Code = 200 | 404 | 500
 ```
 
@@ -201,13 +201,13 @@ type Code = 200 | 404 | 500
 
 ```ts
 interface Success {
-    status: 'success'
-    data: string
+  status: 'success'
+  data: string
 }
 
 interface Error {
-    status: 'error'
-    message: string
+  status: 'error'
+  message: string
 }
 
 type Response = Success | Error
@@ -217,24 +217,24 @@ type Response = Success | Error
 
 ```json
 {
-    "oneOf": [
-        {
-            "type": "object",
-            "properties": {
-                "status": { "type": "string", "enum": ["success"] },
-                "data": { "type": "string" }
-            },
-            "required": ["status", "data"]
-        },
-        {
-            "type": "object",
-            "properties": {
-                "status": { "type": "string", "enum": ["error"] },
-                "message": { "type": "string" }
-            },
-            "required": ["status", "message"]
-        }
-    ]
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["success"] },
+        "data": { "type": "string" }
+      },
+      "required": ["status", "data"]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["error"] },
+        "message": { "type": "string" }
+      },
+      "required": ["status", "message"]
+    }
+  ]
 }
 ```
 
@@ -242,8 +242,8 @@ type Response = Success | Error
 
 ```ts
 interface Example {
-    optional1: string | undefined // Same as string?
-    optional2?: string // Preferred syntax
+  optional1: string | undefined // Same as string?
+  optional2?: string // Preferred syntax
 }
 ```
 
@@ -253,7 +253,7 @@ Both generate the same OpenAPI (non-required property).
 
 ```ts
 interface Example {
-    nullableString: string | null
+  nullableString: string | null
 }
 ```
 
@@ -261,7 +261,7 @@ interface Example {
 
 ```json
 {
-    "type": ["string", "null"]
+  "type": ["string", "null"]
 }
 ```
 
@@ -269,8 +269,8 @@ interface Example {
 
 ```json
 {
-    "type": "string",
-    "nullable": true
+  "type": "string",
+  "nullable": true
 }
 ```
 
@@ -280,11 +280,11 @@ Combine multiple types with `&`.
 
 ```ts
 interface Named {
-    name: string
+  name: string
 }
 
 interface Aged {
-    age: number
+  age: number
 }
 
 type Person = Named & Aged
@@ -300,14 +300,15 @@ type Person = Named & Aged
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "name": { "type": "string" },
-        "age": { "type": "number" }
-    },
-    "required": ["name", "age"]
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "age": { "type": "number" }
+  },
+  "required": ["name", "age"]
 }
 ```
+
 ::: warning
 Autoswag handles only objects intersections.
 :::
@@ -317,11 +318,12 @@ If an object intersection contains a property defined in both objects, Autoswag 
 Example:
 
 ```ts
-// → { "type": "string" }
+// -> { "type": "string" }
 type A = { id: string } & { id: number }
-// → { "type": "number" }
+// -> { "type": "number" }
 type A = { id: number } & { id: string }
 ```
+
 :::
 
 ## Enums
@@ -330,9 +332,9 @@ type A = { id: number } & { id: string }
 
 ```ts
 enum Status {
-    Pending = 'pending',
-    Active = 'active',
-    Inactive = 'inactive',
+  Pending = 'pending',
+  Active = 'active',
+  Inactive = 'inactive',
 }
 ```
 
@@ -340,8 +342,8 @@ enum Status {
 
 ```json
 {
-    "type": "string",
-    "enum": ["pending", "active", "inactive"]
+  "type": "string",
+  "enum": ["pending", "active", "inactive"]
 }
 ```
 
@@ -349,9 +351,9 @@ enum Status {
 
 ```ts
 enum HttpStatus {
-    OK = 200,
-    NotFound = 404,
-    ServerError = 500,
+  OK = 200,
+  NotFound = 404,
+  ServerError = 500,
 }
 ```
 
@@ -359,8 +361,8 @@ enum HttpStatus {
 
 ```json
 {
-    "type": "number",
-    "enum": [200, 404, 500]
+  "type": "number",
+  "enum": [200, 404, 500]
 }
 ```
 
@@ -368,9 +370,9 @@ enum HttpStatus {
 
 ```ts
 enum Order {
-    First, // 0
-    Second, // 1
-    Third, // 2
+  First, // 0
+  Second, // 1
+  Third, // 2
 }
 ```
 
@@ -378,8 +380,8 @@ enum Order {
 
 ```json
 {
-    "type": "number",
-    "enum": [0, 1, 2]
+  "type": "number",
+  "enum": [0, 1, 2]
 }
 ```
 
@@ -387,8 +389,8 @@ enum Order {
 
 ```ts
 const enum Direction {
-    Up = 'up',
-    Down = 'down',
+  Up = 'up',
+  Down = 'down',
 }
 ```
 
@@ -413,10 +415,10 @@ type StringMap = Record<string, number>
 
 ```json
 {
-    "type": "object",
-    "additionalProperties": {
-        "type": "number"
-    }
+  "type": "object",
+  "additionalProperties": {
+    "type": "number"
+  }
 }
 ```
 
@@ -430,10 +432,10 @@ type UserMap = Record<string, User>
 
 ```json
 {
-    "type": "object",
-    "additionalProperties": {
-        "$ref": "#/components/schemas/User"
-    }
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/components/schemas/User"
+  }
 }
 ```
 
@@ -455,8 +457,8 @@ type Config = Record<'development' | 'production', string>
 
 ```ts
 interface Response<T> {
-    data: T
-    status: number
+  data: T
+  status: number
 }
 
 type UserResponse = Response<User>
@@ -493,11 +495,11 @@ Circular types must use the `@component` tag:
  * @component TreeNode
  */
 interface TreeNode {
-    value: string
-    children: TreeNode[] // Circular reference
+  value: string
+  children: TreeNode[] // Circular reference
 }
 ```
 
 Without `@component`, circular references throw an error.
 
-[Learn more about components →](./components)
+[Learn more about components ->](./components)

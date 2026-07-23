@@ -23,8 +23,8 @@ To add `description` field to your schema you should specify it like JSDoc comme
 ```ts
 /** This is a simple description example */
 interface Example {
-    id: string
-    ratio: number
+  id: string
+  ratio: number
 }
 ```
 
@@ -32,17 +32,17 @@ interface Example {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "string"
-        },
-        "ratio": {
-            "type": "number"
-        }
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
     },
-    "description": "This is a simple description example",
-    "required": ["id", "ratio"]
+    "ratio": {
+      "type": "number"
+    }
+  },
+  "description": "This is a simple description example",
+  "required": ["id", "ratio"]
 }
 ```
 
@@ -56,8 +56,8 @@ interface Example {
  * Yep.
  */
 interface Example {
-    id: string
-    ratio: number
+  id: string
+  ratio: number
 }
 ```
 
@@ -65,17 +65,17 @@ interface Example {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "string"
-        },
-        "ratio": {
-            "type": "number"
-        }
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
     },
-    "description": "Autoswag also supports multiline descriptions. Yep.",
-    "required": ["id", "ratio"]
+    "ratio": {
+      "type": "number"
+    }
+  },
+  "description": "Autoswag also supports multiline descriptions. Yep.",
+  "required": ["id", "ratio"]
 }
 ```
 
@@ -93,10 +93,10 @@ Defines `format` field.
 
 ```ts
 interface Example {
-    /** @format uuid */
-    id: string // → { "type": "string", "format": "uuid" }
-    /** @format float */
-    ratio: number // → { "type": "number", "format": "float" }
+  /** @format uuid */
+  id: string // -> { "type": "string", "format": "uuid" }
+  /** @format float */
+  ratio: number // -> { "type": "number", "format": "float" }
 }
 ```
 
@@ -121,8 +121,8 @@ type Name = string
 
 ```json
 {
-    "type": "string",
-    "example": "John Doe"
+  "type": "string",
+  "example": "John Doe"
 }
 ```
 
@@ -133,8 +133,8 @@ type Name = string
  * @example {"street": "123 Main St", "city": "NYC"}
  */
 type Address = {
-    street: string
-    city: string
+  street: string
+  city: string
 }
 ```
 
@@ -142,20 +142,20 @@ type Address = {
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "street": {
-            "type": "string"
-        },
-        "city": {
-            "type": "string"
-        }
+  "type": "object",
+  "properties": {
+    "street": {
+      "type": "string"
     },
-    "required": ["street", "city"],
-    "example": {
-        "street": "123 Main St",
-        "city": "NYC"
+    "city": {
+      "type": "string"
     }
+  },
+  "required": ["street", "city"],
+  "example": {
+    "street": "123 Main St",
+    "city": "NYC"
+  }
 }
 ```
 
@@ -184,9 +184,9 @@ Generated OpenAPI:
 
 ```json
 {
-    "type": "string",
-    "minimum": 18,
-    "maximum": 120
+  "type": "string",
+  "minimum": 18,
+  "maximum": 120
 }
 ```
 
@@ -204,8 +204,8 @@ Define `multipleOf` field.
 
 ```ts
 interface Order {
-    /** @multipleOf 5 */
-    quantity: number
+  /** @multipleOf 5 */
+  quantity: number
 }
 ```
 
@@ -213,14 +213,14 @@ Generated OpenAPI:
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "quantity": {
-            "type": "number",
-            "multipleOf": 5
-        }
-    },
-    "required": ["quantity"]
+  "type": "object",
+  "properties": {
+    "quantity": {
+      "type": "number",
+      "multipleOf": 5
+    }
+  },
+  "required": ["quantity"]
 }
 ```
 
@@ -238,8 +238,8 @@ Defines `pattern` field.
 
 ```ts
 interface User {
-    /** @pattern ^[a-zA-Z0-9_]+$ */
-    username: string
+  /** @pattern ^[a-zA-Z0-9_]+$ */
+  username: string
 }
 ```
 
@@ -247,14 +247,14 @@ Generated OpenAPI:
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "username": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9_]+$"
-        }
-    },
-    "required": ["username"]
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$"
+    }
+  },
+  "required": ["username"]
 }
 ```
 

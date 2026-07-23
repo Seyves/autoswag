@@ -45,35 +45,35 @@ Without Autoswag, you'd maintain types AND schemas separately:
 
 ```ts [types.ts]
 interface User {
-    id: string
-    name: string
-    email?: string
+  id: string
+  name: string
+  email?: string
 }
 ```
 
 ```json [manual-openapi.json]
 {
-    "paths": {
-        "/user": {
-            "post": {
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": { "type": "string", "format": "uuid" },
-                                    "name": { "type": "string" },
-                                    "email": { "type": "string" }
-                                },
-                                "required": ["id", "name"]
-                            }
-                        }
-                    }
-                }
+  "paths": {
+    "/user": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "format": "uuid" },
+                  "name": { "type": "string" },
+                  "email": { "type": "string" }
+                },
+                "required": ["id", "name"]
+              }
             }
+          }
         }
+      }
     }
+  }
 }
 ```
 
@@ -87,10 +87,10 @@ With Autoswag, document endpoints with JSDoc and reference your types:
 
 ```ts [src/types/user.ts]
 interface User {
-    /** @format uuid */
-    id: string
-    name: string
-    email?: string
+  /** @format uuid */
+  id: string
+  name: string
+  email?: string
 }
 ```
 
@@ -103,103 +103,89 @@ interface User {
  * @response 400 Invalid user data
  */
 export async function createUser(req, res) {
-    // Your implementation
+  // Your implementation
 }
 ```
 
 :::
 
-Run the generator:
+Run **Autoswag CLI**:
 
-```ts
-import { generate, OpenApiVersion } from 'autoswag'
-import { writeFileSync } from 'fs'
-
-const spec = generate({
-    source: ['src/**/*.ts'],
-    baseDoc: {
-        info: {
-            title: 'My API',
-            version: '1.0.0',
-        },
-    },
-    version: OpenApiVersion.v31,
-})
-
-writeFileSync('./openapi.json', JSON.stringify(spec, null, 2))
+```sh
+$ npx autoswag
 ```
 
-The generated OpenAPI document:
+Get your generated OpenAPI document:
 
 ::: details Generated OpenAPI (click to expand)
 
 ```json
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "My API",
-        "version": "1.0.0"
-    },
-    "paths": {
-        "/user": {
-            "post": {
-                "summary": "Create a new user",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "uuid"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": ["id", "name"]
-                            }
-                        }
-                    }
+  "openapi": "3.1.0",
+  "info": {
+    "title": "My API",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {}
+  },
+  "paths": {
+    "/user": {
+      "post": {
+        "summary": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
                 },
-                "responses": {
-                    "201": {
-                        "description": "User created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "format": "uuid"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "email": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": ["id", "name"]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid user data"
-                    }
-                }
+                "required": ["id", "name"]
+              }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "name"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user data"
+          }
         }
-    },
-    "components": {
-        "schemas": {}
+      }
     }
+  }
 }
 ```
 
@@ -214,7 +200,7 @@ The generated OpenAPI document:
 3. **Run the generator** - Scans your code, extracts endpoints, converts types
 4. **Get OpenAPI output** - Valid OpenAPI 3.0/3.1 JSON ready to use
 
-The generator uses the TypeScript compiler API to understand your types perfectly, supporting interfaces, unions, generics, and more.
+The generator uses the TypeScript compiler API to understand your types perfectly, supporting interfaces, unions, generics, and [more](./supported-types).
 
 ## What Makes It Different?
 
@@ -233,16 +219,16 @@ The generator uses the TypeScript compiler API to understand your types perfectl
 **vs. Code-first frameworks (tsoa, NestJS):**
 
 - Framework-agnostic - works with Express, Fastify, Hono, anything
-- No decorators required
+- No runtime decorators required
 - Lighter weight, just documentation generation
 
 ## Next Steps
 
 Ready to get started?
 
-- **[Installation & Setup →](./installation)** - Install and configure in 2 minutes
-- **[Quick Start Guide →](./quick-start)** - Generate your first OpenAPI doc
-- **[JSDoc Tags Reference →](./tags-overview)** - Learn all available tags
-- **[TypeScript Support →](./supported-types)** - See what types are supported
+- **[Installation & Setup ->](./installation)** - Install and configure in 2 minutes
+- **[Quick Start Guide ->](./quick-start)** - Generate your first OpenAPI doc
+- **[JSDoc Tags Reference ->](./tags-overview)** - Learn all available tags
+- **[TypeScript Support ->](./supported-types)** - See what types are supported
 
-Or jump straight to **[examples →](./rest-api-example)** to see real-world usage.
+Or jump straight to **[examples ->](./rest-api-example)** to see real-world usage.

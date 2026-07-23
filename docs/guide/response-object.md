@@ -1,6 +1,6 @@
 # Response Object
 
-Tags that define OpenAPI [Response Object](https://spec.openapis.org/oas/v3.1.0.html#responses-object)
+Tags that define OpenAPI [Response Object](https://spec.openapis.org/oas/v3.1.0.html#responses-object).
 
 ## @response
 
@@ -14,11 +14,11 @@ Tags that define OpenAPI [Response Object](https://spec.openapis.org/oas/v3.1.0.
 - `{type}` - Response body type (optional)
 - `code` - HTTP status code (200, 404, etc.)
 - `.contentType` - MIME type (optional, default: `application/json`)
-- `description` - Response description
+- `description` - Description
 
 ### Example
 
-```ts
+```ts{4-5,11-12}
 /**
  * @autoswag GET /users/{id}
  * @pathParam {string} id User ID

@@ -23,26 +23,26 @@ If you're not using TypeScript, you can still define types with JSDoc comments. 
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "string",
-            "description": "User ID"
-        },
-        "name": {
-            "type": "string",
-            "description": "Full name"
-        },
-        "email": {
-            "type": "string",
-            "description": "Email address "
-        },
-        "age": {
-            "type": "number",
-            "description": "Age in years"
-        }
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "User ID"
     },
-    "required": ["id", "name", "age"]
+    "name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "age": {
+      "type": "number",
+      "description": "Age in years"
+    }
+  },
+  "required": ["id", "name", "age"]
 }
 ```
 
@@ -81,25 +81,25 @@ is very strict about @typedef definitions. It is not allowed to use custom JSDoc
 
 ```json
 {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "string",
-            "description": "User ID"
-            "format": "uuid"
-        },
-        "email": {
-            "type": "string",
-            "description": "Email address "
-            "format": "email"
-        },
-        "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp"
-            "format": "date-time"
-        }
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "User ID",
+      "format": "uuid"
     },
-    "required": ["id", "email", "createdAt"]
+    "email": {
+      "type": "string",
+      "description": "Email address",
+      "format": "email"
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "Creation timestamp",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "email", "createdAt"]
 }
 ```
 
@@ -107,7 +107,7 @@ is very strict about @typedef definitions. It is not allowed to use custom JSDoc
 
 This syntax also used to define `@typedef` type as an OpenAPI component.
 
-[See more about components →](./components)
+[See more about components ->](./components)
 
 ```javascript
 /**
@@ -126,28 +126,28 @@ This syntax also used to define `@typedef` type as an OpenAPI component.
 
 ```json
 {
-    "components": {
-        "schemas": {
-            "User": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email"
-                    }
-                },
-                "required": ["id", "name", "email"],
-                "description": "User account information"
-            }
-        }
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": ["id", "name", "email"],
+        "description": "User account information"
+      }
     }
+  }
 }
 ```
 
@@ -158,20 +158,18 @@ This syntax also used to define `@typedef` type as an OpenAPI component.
 ```ts
 /** @component User */
 interface User {
-    /**
-     * User ID
-     * @format uuid
-     */
-    id: string
-
-    /** Full name */
-    name: string
-
-    /**
-     * Email address
-     * @format email
-     */
-    email: string
+  /**
+   * User ID
+   * @format uuid
+   */
+  id: string
+  /** Full name */
+  name: string
+  /**
+   * Email address
+   * @format email
+   */
+  email: string
 }
 ```
 

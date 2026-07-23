@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Autoswag
   text: OpenAPI from TypeScript
-  tagline: Generate OpenAPI documentation from JSDoc comments and TypeScript types. Keep your API docs in sync with your code automatically.
+  tagline: Keep your JSDoc. Reuse your TypeScript and Zod types. Generate OpenAPI without decorators or duplicate schemas.
   actions:
     - theme: brand
       text: Get Started
@@ -17,23 +17,39 @@ hero:
       link: /guide/introduction
 
 features:
-  - icon: 🎯
-    title: Single Source of Truth
-    details: Define types once in TypeScript, reference them in JSDoc. No duplication, no drift between code and documentation.
+  - title: No Duplicate Schemas
+    details: Define types once in TypeScript or Zod, reference them in JSDoc. No duplication, no drift. Change your type, documentation updates automatically.
 
-  - icon: ⚡
-    title: TypeScript-First
-    details: Automatically converts TypeScript types to OpenAPI schemas. Interfaces, unions, generics, enums - all supported out of the box.
+  - title: Works with Existing APIs
+    details: Plain Express, Fastify, Hono—no wrappers needed. No framework lock-in. Millions of existing Node.js APIs don't need rewrites.
 
-  - icon: 📝
-    title: JSDoc Powered
-    details: Document endpoints using natural JSDoc comments. Simple syntax, powerful features, stays close to your implementation.
+  - title: Comprehensive Type Support
+    details: Unions, discriminated unions, generics, enums, intersections, arrays, tuples, records. Zod schemas with automatic format inference. Everything you need.
 ---
 
-## Usage example
+## Quick Example
+
+Define types once in TypeScript:
 
 ```ts
-import type { User, CreateUserRequest, ErrorResponse } from '@/types/user'
+// types/user.ts
+export interface User {
+    id: string
+    name: string
+    email?: string
+}
+
+export interface CreateUserRequest {
+    name: string
+    email: string
+}
+```
+
+Document endpoints with JSDoc:
+
+```ts
+// api/users.ts
+import type { User, CreateUserRequest } from '@/types/user'
 
 /**
  * @autoswag POST /users
@@ -41,10 +57,57 @@ import type { User, CreateUserRequest, ErrorResponse } from '@/types/user'
  * @tag Users
  * @accept {CreateUserRequest}
  * @response {User} 201 User created successfully
- * @response {ErrorResponse} 400 Invalid input
- * @response 401 Unauthorized
+ * @response 400 Invalid input
  */
 export async function createUser(req, res) {
-    // Your implementation here
+    // Your implementation
+}
+```
+
+**Generates complete OpenAPI documentation:**
+
+```json
+{
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "Create a new user",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" }
+                },
+                "required": ["name", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "email": { "type": "string" }
+                  },
+                  "required": ["id", "name"]
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    }
+  }
 }
 ```

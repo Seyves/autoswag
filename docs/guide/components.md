@@ -15,9 +15,9 @@ Mark a type as a component by adding `@component` in its JSDoc:
  * @component User
  */
 interface User {
-    id: string
-    name: string
-    email: string
+  id: string
+  name: string
+  email: string
 }
 ```
 
@@ -81,8 +81,8 @@ Component name should **always** be specified:
  * @component UserProfile
  */
 interface User {
-    id: string
-    name: string
+  id: string
+  name: string
 }
 ```
 
@@ -95,18 +95,18 @@ Components can reference other components:
  * @component Address
  */
 interface Address {
-    street: string
-    city: string
-    country: string
+  street: string
+  city: string
+  country: string
 }
 
 /**
  * @component User
  */
 interface User {
-    id: string
-    name: string
-    address: Address  // References another component
+  id: string
+  name: string
+  address: Address // References another component
 }
 ```
 
@@ -150,10 +150,10 @@ Circular types **must** use `@component`:
  * @component Category
  */
 interface Category {
-    id: string
-    name: string
-    parent?: Category  // Circular reference
-    children: Category[]
+  id: string
+  name: string
+  parent?: Category // Circular reference
+  children: Category[]
 }
 ```
 
@@ -166,9 +166,9 @@ Without `@component`, the generator throws an error to prevent infinite recursio
  * @component TreeNode
  */
 interface TreeNode {
-    value: string
-    left?: TreeNode
-    right?: TreeNode
+  value: string
+  left?: TreeNode
+  right?: TreeNode
 }
 ```
 
@@ -179,60 +179,21 @@ interface TreeNode {
  * @component ListNode
  */
 interface ListNode<T> {
-    value: T
-    next?: ListNode<T>
+  value: T
+  next?: ListNode<T>
 }
-```
-
-## Manually Defined Components
-
-You can also define components directly in `baseDoc`:
-
-```ts
-import { generate } from 'autoswag'
-
-const spec = generate({
-    source: ['src/api/**/*.ts'],
-    baseDoc: {
-        info: { title: 'My API', version: '1.0.0' },
-        components: {
-            schemas: {
-                Error: {
-                    type: 'object',
-                    properties: {
-                        code: { type: 'string' },
-                        message: { type: 'string' }
-                    },
-                    required: ['code', 'message']
-                }
-            }
-        }
-    }
-})
-```
-
-Reference with `{ref:Error}`:
-
-```ts
-/**
- * @autoswag GET /data
- * @response {Data} 200 Success
- * @response {ref:Error} 500 Server error
- */
 ```
 
 ## Component Merging
 
-Generated components are merged with `baseDoc.components.schemas`:
+Generated components are merged with [`documents[n].components`](./configuration#documents-n-components) components:
 
-```ts
-// baseDoc provides Error
-baseDoc: {
-    components: {
-        schemas: {
-            Error: { /* ... */ }
-        }
-    }
+```js
+// Manually provided Error schema
+components: {
+  schemas: {
+    Error: { /* ... */ }
+  }
 }
 
 // Your code defines User with @component
@@ -245,8 +206,8 @@ interface User { /* ... */ }
 {
   "components": {
     "schemas": {
-      "Error": { /* from baseDoc */ },
-      "User": { /* from generated */ }
+      "Error": { /* manually defined */ },
+      "User": { /* generated */ }
     }
   }
 }

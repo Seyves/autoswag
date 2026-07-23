@@ -1,6 +1,6 @@
 # Parameter Object
 
-Tags that define OpenAPI [Parameter Object](https://spec.openapis.org/oas/v3.1.0.html#parameter-object)
+Tags that define OpenAPI [Parameter Object](https://spec.openapis.org/oas/v3.1.0.html#parameter-object).
 
 ## Common Syntax
 
@@ -9,14 +9,14 @@ Tags that define OpenAPI [Parameter Object](https://spec.openapis.org/oas/v3.1.0
 @<tag> {type} name [description]
 ```
 
-- `{type}` - TypeScript type reference
+- `{type}` - [Type reference](./type-referencing)
 - `[name]` - Optional parameter (with brackets)
 - `name` - Required parameter (no brackets)
-- `[description]` - Human-readable description
+- `[description]` - Description
 
 ## @pathParam
 
-Defines **Parameter Object** with `path` name
+Defines **Parameter Object** with `path` name.
 
 ### Syntax
 
@@ -26,7 +26,7 @@ Defines **Parameter Object** with `path` name
 
 ### Example
 
-```ts
+```ts{3,9}
 /**
  * @autoswag GET /users/{id}
  * @pathParam {string} id User ID
@@ -45,18 +45,18 @@ Path parameters are **always required** in OpenAPI. The `[name]` optional syntax
 
 ## @queryParam
 
-Defines **Parameter Object** with `query` name
+Defines **Parameter Object** with `query` name.
 
 ### Syntax
 
 ```
-@queryParam {type} [name] description // Optional
-@queryParam {type} name description   // Required
+@queryParam {type} [name] description
+@queryParam {type} name description  
 ```
 
 ### Example
 
-```ts
+```ts{3-5}
 /**
  * @autoswag GET /users
  * @queryParam {number} [limit] Max results
@@ -68,7 +68,7 @@ Defines **Parameter Object** with `query` name
 
 ## @headerParam
 
-Defines **Parameter Object** with `header` name
+Defines **Parameter Object** with `header` name.
 
 ### Syntax
 
@@ -79,7 +79,7 @@ Defines **Parameter Object** with `header` name
 
 ### Example
 
-```ts
+```ts{3-4}
 /**
  * @autoswag POST /users
  * @headerParam {uuid} X-Idempotency-Key Unique request ID
@@ -89,23 +89,23 @@ Defines **Parameter Object** with `header` name
  */
 ```
 ::: tip Authorization
-Header params are separate from security schemes. For OAuth/API keys, use [`@security`](./security) instead.
+Header params are separate from security schemes. For OAuth/API keys, use [`@security`](./operation-object#security) instead.
 :::
 
 ## @cookieParam
 
-Defines **Parameter Object** with `cookie` name
+Defines **Parameter Object** with `cookie` name.
 
 ### Syntax
 
 ```
-@cookieParam {type} [name] description // Optional
-@cookieParam {type} name description   // Required
+@cookieParam {type} [name] description 
+@cookieParam {type} name description  
 ```
 
 ### Example
 
-```ts
+```ts{3-4}
 /**
  * @autoswag GET /profile
  * @cookieParam {string} sessionId Session identifier
