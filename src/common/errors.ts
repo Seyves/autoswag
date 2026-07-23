@@ -17,7 +17,7 @@ export function getLocationFromSymbol(symbol: ts.Symbol) {
     const sf = node.getSourceFile()
     const pos = sf.getLineAndCharacterOfPosition(node.getStart())
     const sourceFile = node.getSourceFile()
-    return `${sourceFile.fileName}:${pos.line}:${pos.character}`
+    return `${sourceFile.fileName}:${pos.line + 1}:${pos.character}`
 }
 
 export function getLocationFromLine(fileName: string, source: commentParser.Line[]) {

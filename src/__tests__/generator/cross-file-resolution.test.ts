@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest'
-import { generate, OpenApiVersion } from '../../index'
+import { Generator, OpenApiVersion } from '../../index'
 
 describe('Generator - Cross-File Type Resolution', () => {
     const fixtures = 'src/__tests__/generator/fixtures'
@@ -10,7 +10,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have resolved User type from types.ts
             expect(result.components.schemas).toHaveProperty('User')
@@ -23,7 +24,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // User type contains UserProfile
             expect(result.components.schemas).toHaveProperty('UserProfile')
@@ -42,7 +44,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const response = result.paths['/users']!.get.responses![200]!
             expect(response.content!['application/json'].schema).toEqual({
@@ -55,7 +58,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/users/api.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const requestBody = result.paths['/users']!.post.requestBody!
             expect(requestBody.content!['application/json'].schema).toEqual({
@@ -72,7 +76,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have both users and posts paths
             expect(result.paths).toHaveProperty('/users')
@@ -87,7 +92,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have types from both modules
             expect(result.components.schemas).toHaveProperty('User')
@@ -104,7 +110,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/posts/types.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Post references User from another module
             expect(result.components.schemas).toHaveProperty('Post')
@@ -123,7 +130,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/nested-imports/dto.ts`,
                 `${fixtures}/complex/nested-imports/models.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v31 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should resolve DTOs that extend BaseModel
             expect(result.components.schemas).toHaveProperty('UserDTO')
@@ -138,7 +146,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/nested-imports/dto.ts`,
                 `${fixtures}/complex/nested-imports/models.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const userDTO = result.components.schemas.UserDTO as any
             expect(userDTO.properties).toHaveProperty('id')
@@ -156,7 +165,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/shared/common.ts`,
                 `${fixtures}/cross-file/users/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('User')
             expect(result.components.schemas).toHaveProperty('ErrorResponse')
@@ -169,7 +179,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/cross-file/posts/api.ts`,
                 `${fixtures}/cross-file/posts/types.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // User is used in both users and posts modules
             const userSchemaKeys = Object.keys(result.components.schemas).filter(
@@ -185,7 +196,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/generic-types/api.ts`,
                 `${fixtures}/complex/generic-types/response.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have resolved UserResponse (ApiResponse<User>)
             expect(result.components.schemas).toHaveProperty('UserResponse')
@@ -201,7 +213,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/generic-types/api.ts`,
                 `${fixtures}/complex/generic-types/response.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const userResponse = result.components.schemas.UserResponse as any
             // data should be User type
@@ -215,7 +228,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/generic-types/api.ts`,
                 `${fixtures}/complex/generic-types/response.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('UserListResponse')
             const userListResponse = result.components.schemas.UserListResponse as any
@@ -235,7 +249,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/circular-refs/user.ts`,
                 `${fixtures}/complex/circular-refs/post.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have both types
             expect(result.components.schemas).toHaveProperty('User')
@@ -248,7 +263,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/circular-refs/user.ts`,
                 `${fixtures}/complex/circular-refs/post.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const user = result.components.schemas.User as any
             const post = result.components.schemas.Post as any
@@ -274,7 +290,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/utility-types/api.ts`,
                 `${fixtures}/complex/utility-types/base.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('PublicUser')
             const publicUser = result.components.schemas.PublicUser as any
@@ -291,7 +308,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/utility-types/api.ts`,
                 `${fixtures}/complex/utility-types/base.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('CreateUserRequest')
             const createRequest = result.components.schemas.CreateUserRequest as any
@@ -309,7 +327,8 @@ describe('Generator - Cross-File Type Resolution', () => {
                 `${fixtures}/complex/utility-types/api.ts`,
                 `${fixtures}/complex/utility-types/base.ts`,
             ]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('UpdateUserRequest')
             const updateRequest = result.components.schemas.UpdateUserRequest as any

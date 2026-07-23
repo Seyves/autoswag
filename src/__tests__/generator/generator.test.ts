@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest'
-import { generate, OpenApiVersion } from '../../index'
+import { Generator, OpenApiVersion } from '../../index'
 
 describe('Generator - Basic Orchestration', () => {
     const fixtures = 'src/__tests__/generator/fixtures'
@@ -7,10 +7,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Single File Processing', () => {
         test('should generate OpenAPI document from single file', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({
-                source: files,
-                version: OpenApiVersion.v30,
-            })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result).toHaveProperty('openapi', '3.0.0')
             expect(result).toHaveProperty('paths')
@@ -20,7 +18,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should have correct path structure', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.paths).toHaveProperty('/users/{id}')
             expect(result.paths['/users/{id}']).toHaveProperty('get')
@@ -28,7 +27,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should resolve TypeScript type to component', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('User')
             expect(result.components.schemas.User).toEqual({
@@ -44,7 +44,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should link response to component schema', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const response = result.paths['/users/{id}']!.get.responses![200]!
             expect(response.content!['application/json'].schema).toEqual({
@@ -54,7 +55,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should resolve path parameters', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const params = result.paths['/users/{id}']!.get.parameters!
             expect(params).toHaveLength(1)
@@ -71,7 +73,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Multiple Endpoints in Single File', () => {
         test('should process multiple autoswag blocks', () => {
             const files = [`${fixtures}/simple/multiple-endpoints.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.paths['/users']).toHaveProperty('get')
             expect(result.paths['/users']).toHaveProperty('post')
@@ -80,7 +83,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should create components for all used types', () => {
             const files = [`${fixtures}/simple/multiple-endpoints.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(result.components.schemas).toHaveProperty('User')
             expect(result.components.schemas).toHaveProperty('CreateUserRequest')
@@ -90,7 +94,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Primitive Types', () => {
         test('should inline primitive types without creating components', () => {
             const files = [`${fixtures}/simple/primitives-only.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should have no components for primitives
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
@@ -105,7 +110,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should resolve format types correctly', () => {
             const files = [`${fixtures}/simple/with-formats.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const requestBody = result.paths['/users']!.post.requestBody!
             expect(requestBody.content!['application/json'].schema).toEqual({
@@ -130,7 +136,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Mixed ref: and TypeScript Types', () => {
         test('should handle ref: prefixed schemas', () => {
             const files = [`${fixtures}/simple/mixed-refs-and-types.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(Object.keys(result.components.schemas)).toHaveLength(1)
             // TypeScript type should be resolved
@@ -150,7 +157,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should not create components for ref: prefixed types', () => {
             const files = [`${fixtures}/simple/mixed-refs-and-types.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Should only have User, not LegacyUserFormat
             expect(result.components.schemas).toHaveProperty('User')
@@ -159,7 +167,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should handle imported type expressions', () => {
             const files = [`${fixtures}/simple/imported-type-expression.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const responseArr = result.paths['/users']!.get.responses![200]
             const contentArr = responseArr.content!['application/json']
@@ -182,7 +191,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should handle type expressions', () => {
             const files = [`${fixtures}/simple/type-expression.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const responseArr = result.paths['/users']!.get.responses![200]
             const contentArr = responseArr.content!['application/json']
@@ -205,7 +215,8 @@ describe('Generator - Basic Orchestration', () => {
         test('should throw on invalid type expression', () => {
             const files = [`${fixtures}/simple/invalid-type-expression.ts`]
             expect(() => {
-                generate({ source: files, version: OpenApiVersion.v30 })
+                const generator = new Generator({ version: OpenApiVersion.v30 })
+                generator.build(files)
             }).toThrow('Invalid type expression')
         })
     })
@@ -213,7 +224,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Empty and Edge Cases', () => {
         test('should handle files with no autoswag tags', () => {
             const files = [`${fixtures}/edge-cases/no-autoswag.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(Object.keys(result.paths)).toHaveLength(0)
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
@@ -221,7 +233,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should handle empty files', () => {
             const files = [`${fixtures}/edge-cases/empty-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             expect(Object.keys(result.paths)).toHaveLength(0)
             expect(Object.keys(result.components.schemas)).toHaveLength(0)
@@ -231,7 +244,8 @@ describe('Generator - Basic Orchestration', () => {
             const files = [`${fixtures}/edge-cases/type-not-found.ts`]
 
             expect(() => {
-                generate({ source: files, version: OpenApiVersion.v30 })
+                const generator = new Generator({ version: OpenApiVersion.v30 })
+                generator.build(files)
             }).toThrow(`Cannot find type: 'NonExistentType'`)
         })
     })
@@ -239,7 +253,8 @@ describe('Generator - Basic Orchestration', () => {
     describe('Document Structure Validation', () => {
         test('should have valid OpenAPI 3.0 structure', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             // Required top-level fields
             expect(result.openapi).toBe('3.0.0')
@@ -250,7 +265,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should have valid path item structure', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const pathItem = result.paths['/users/{id}']!
             expect(pathItem).toHaveProperty('get')
@@ -259,7 +275,8 @@ describe('Generator - Basic Orchestration', () => {
 
         test('should have valid operation structure', () => {
             const files = [`${fixtures}/simple/single-file.ts`]
-            const result = generate({ source: files, version: OpenApiVersion.v30 })
+            const generator = new Generator({ version: OpenApiVersion.v30 })
+            const result = generator.build(files)
 
             const operation = result.paths['/users/{id}']!.get
             expect(operation).toBeDefined()
