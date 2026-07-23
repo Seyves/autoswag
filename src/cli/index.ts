@@ -18,6 +18,7 @@ const config = {
       output: 'openapi.json',
       root: {
         info: {
+          version: '1.0.0',
           title: 'Your title here',
           description: 'Your description here',
         },
@@ -83,15 +84,19 @@ async function execute() {
 
     let cfg: config.Config
     try {
-        const p = path.resolve(cwd, parsed.config)
-        const module = await import(p)
-        if (!module.default) throw new Error('config does not have a default import')
+        const cfgPath = path.resolve(cwd, parsed.config)
+        if (!fs.existsSync(cfgPath)) {
+            const hint =
+                'Generate init config with --init or provide a different path with --config.'
+            throw new Error(`not found at ${cfgPath}.\n${hint}`)
+        }
+        const module = await import(cfgPath)
+        if (!module.default) {
+            throw new Error('module does not have a default import')
+        }
         cfg = config.parse(module.default)
     } catch (e) {
-        console.error(
-            '\x1b[31m%s\x1b[0m',
-            `Error parsing configuration file: ${(e as Error).message}`,
-        )
+        console.error('\x1b[31m%s\x1b[0m', `Error parsing config file: ${(e as Error).message}`)
         process.exit(1)
     }
 
@@ -105,10 +110,7 @@ async function execute() {
             if (e instanceof autoswag.AutoswagError) {
                 console.error('\x1b[31m%s\x1b[0m', `Syntax error: ${e.message}`)
             } else {
-                console.error(
-                    '\x1b[31m%s\x1b[0m',
-                    `Error while parsing source: ${(e as Error).message}`,
-                )
+                console.error('\x1b[31m%s\x1b[0m', `Error parsing source: ${(e as Error).message}`)
             }
             process.exit(1)
         }

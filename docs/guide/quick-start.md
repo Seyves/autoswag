@@ -33,6 +33,7 @@ const config = {
       // Root OpenAPI information
       root: {
         info: {
+          version: '1.0.0',
           title: 'Your title here',
           description: 'Your description here',
         },

@@ -15,7 +15,7 @@
     "type": "git",
     "url": "https://github.com/Seyves/autoswag.git"
   },
-  "bin": "./dist/cli.js",
+  "bin": "./dist/cli/index.js",
   "main": "./dist/index.js",
   "sideEffects": false,
   "scripts": {

@@ -97,17 +97,16 @@ export class Generator<V extends OpenApiVersion> {
             openapi: this.version,
             ...root,
             components: {
+                ...components,
                 schemas: resComponents,
             },
             paths: paths,
         }
 
-        document.components = { ...document.components, ...components }
-
         if (components.schemas) {
             document.components.schemas = {
-                ...document.components.schemas,
                 ...components.schemas,
+                ...document.components.schemas,
             }
         }
         // @ts-ignore
