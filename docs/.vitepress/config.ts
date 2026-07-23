@@ -17,7 +17,6 @@ export default defineConfig({
                         { text: 'Introduction', link: '/guide/introduction' },
                         { text: 'Installation', link: '/guide/installation' },
                         { text: 'Quick Start', link: '/guide/quick-start' },
-                        { text: 'Configuration', link: '/guide/configuration' },
                     ],
                 },
                 {
@@ -32,7 +31,6 @@ export default defineConfig({
                         { text: 'Request Body Object', link: '/guide/request-body-object' },
                         { text: 'Response Object', link: '/guide/response-object' },
                         { text: 'Type referencing', link: '/guide/type-referencing' },
-                        { text: 'Security', link: '/guide/security' },
                     ],
                 },
                 {
@@ -43,6 +41,13 @@ export default defineConfig({
                         { text: 'Metadata Tags', link: '/guide/metadata-tags' },
                         { text: 'JSDoc @typedef', link: '/guide/jsdoc-typedef' },
                     ],
+                },
+                {
+                    text: 'Reference',
+                    items: [
+                        { text: 'Configuration', link: '/guide/configuration' },
+                        { text: 'CLI', link: '/guide/cli' },
+                    ]
                 },
                 {
                     text: 'Examples',

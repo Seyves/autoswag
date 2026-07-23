@@ -15,6 +15,7 @@
     "type": "git",
     "url": "https://github.com/Seyves/autoswag.git"
   },
+  "bin": "./dist/cli.js",
   "main": "./dist/index.js",
   "sideEffects": false,
   "scripts": {
@@ -38,5 +39,13 @@
     "vitepress-plugin-group-icons": "^1.7.5",
     "vitest": "^4.1.9",
     "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "yaml": "^2.9.0"
+  },
+  "peerDependenciesMeta": {
+    "yaml": {
+      "optional": true
+    }
   }
 }

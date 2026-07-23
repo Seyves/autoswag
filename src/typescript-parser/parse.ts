@@ -154,9 +154,8 @@ export function parseTypeExpression(
 
     if (foundDiagnostic) {
         const msg = foundDiagnostic.messageText.toString()
-        const tsError = msg[msg.length - 1] === '.' ? msg.slice(0, msg.length - 1) : msg
         throw new AutoswagError(
-            `Invalid type expression: '${typeExpression}' (${tsError})`,
+            `Invalid type expression: '${typeExpression}' (${msg})`,
             `${fileName}:${position.join(':')}`,
         )
     }
