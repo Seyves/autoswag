@@ -1,6 +1,6 @@
 {
   "name": "autoswag",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate swagger documentation with automatically parsed schemas from your .ts files!",
   "homepage": "https://autoswag.vercel.app/",
   "bugs": "https://github.com/Seyves/autoswag/issues",
